@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 360" role="img" aria-labelledby="title">
+  <title id="title">Stylized simulation portrait for Donald Duke</title>
+  <rect width="320" height="360" rx="34" fill="#fff0ef"/>
+  <circle cx="160" cy="142" r="72" fill="#bb7b58"/>
+  <path d="M89 134c12-56 50-82 95-73 35 7 57 34 64 72-57-18-109-18-159 1Z" fill="#26201f"/>
+  <path d="M111 154h34M177 154h34" stroke="#151515" stroke-width="8" stroke-linecap="round"/>
+  <path d="M132 192c16 12 41 12 57 0" fill="none" stroke="#5c2e20" stroke-width="8" stroke-linecap="round"/>
+  <path d="M66 340c17-77 62-119 134-119s112 42 134 119Z" fill="#b3261e"/>
+  <path d="M118 238h84l-42 60Z" fill="#ffffff"/>
+  <text x="160" y="326" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="800" fill="#ffffff">PRP</text>
+</svg>

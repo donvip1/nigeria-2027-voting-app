@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Results page for live-style virtual vote totals and rankings.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added vote totals, leader summary, ranked rows, and progress bars.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added vote totals, leader summary, party badges, ranked rows, and progress bars.
 *********************************************************/
 
 // ========================================================
@@ -12,6 +12,7 @@
 // ========================================================
 import AdSlot from '../components/AdSlot';
 import Disclaimer from '../components/Disclaimer';
+import { getPartyBadge } from '../lib/candidateAssets';
 
 // ========================================================
 // Results page component
@@ -43,13 +44,17 @@ export default function ResultsPage({ candidates, loading }) {
         ) : (
           candidates.map((candidate, index) => {
             const percentage = getPercentage(candidate.vote_count, totalVotes);
+            const partyBadge = getPartyBadge(candidate);
             return (
               <article key={candidate.id} className="result-row">
                 <div className="result-row__header">
                   <div>
                     <span className="rank">#{index + 1}</span>
                     <strong>{candidate.name}</strong>
-                    <span className="party-code">{candidate.party_code}</span>
+                    <span className="party-code party-code--with-badge">
+                      {partyBadge && <img src={partyBadge} alt="" aria-hidden="true" />}
+                      {candidate.party_code}
+                    </span>
                   </div>
                   <div>
                     <strong>{Number(candidate.vote_count || 0).toLocaleString()}</strong>

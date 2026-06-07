@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title">
+  <title id="title">ADC simulation party badge</title>
+  <rect width="160" height="160" rx="36" fill="#1357a6"/>
+  <path d="M42 102 80 30l38 72H94l-14-28-14 28Z" fill="#ffffff"/>
+  <circle cx="80" cy="104" r="17" fill="#ffc107"/>
+  <text x="80" y="136" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#ffffff">ADC</text>
+</svg>

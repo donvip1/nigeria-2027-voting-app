@@ -4,7 +4,7 @@
  Description:           Global visual styles for the Nigeria 2027 virtual voting frontend.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added responsive layout, cards, forms, navigation, results, polls, information, privacy, contact, and footer link styling.
+ Modification Notes:    Added responsive layout, logo, candidate visuals, party badges, cards, forms, navigation, results, polls, information, privacy, contact, and footer link styling.
 *********************************************************/
 
 /* ========================================================
@@ -98,6 +98,19 @@ input:focus-visible {
 
 .site-header h1 {
   font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+}
+
+.brand-lockup {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.brand-logo {
+  border-radius: 8px;
+  display: block;
+  height: 54px;
+  width: 54px;
 }
 
 .eyebrow {
@@ -379,6 +392,16 @@ input {
   white-space: nowrap;
 }
 
+.party-code--with-badge {
+  gap: 6px;
+}
+
+.party-code--with-badge img {
+  border-radius: 5px;
+  height: 18px;
+  width: 18px;
+}
+
 .status-pill--done {
   background: #0b2719;
   color: #ffffff;
@@ -405,26 +428,42 @@ input {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  overflow: hidden;
   padding: 18px;
+}
+
+.candidate-portrait-wrap {
+  aspect-ratio: 16 / 11;
+  background: #eef5ef;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.candidate-portrait {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.candidate-party-badge {
+  background: #ffffff;
+  border: 3px solid #ffffff;
+  border-radius: 12px;
+  bottom: 10px;
+  box-shadow: 0 8px 20px rgba(18, 35, 24, 0.16);
+  height: 52px;
+  position: absolute;
+  right: 10px;
+  width: 52px;
 }
 
 .candidate-card__top {
   align-items: center;
   display: flex;
   gap: 14px;
-}
-
-.candidate-avatar {
-  align-items: center;
-  background: color-mix(in srgb, var(--candidate-color) 14%, white);
-  border: 1px solid color-mix(in srgb, var(--candidate-color) 30%, white);
-  border-radius: 8px;
-  color: var(--candidate-color);
-  display: flex;
-  flex: 0 0 auto;
-  height: 66px;
-  justify-content: center;
-  width: 66px;
 }
 
 .candidate-card h3 {
@@ -836,6 +875,10 @@ input {
   .site-header__inner,
   .hero {
     display: flex;
+  }
+
+  .brand-lockup {
+    align-items: flex-start;
   }
 
   .tabs {

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">Nigeria 2027 Virtual Vote logo</title>
+  <desc id="desc">A Nigeria-themed green and white ballot shield logo for the virtual vote simulation.</desc>
+  <rect width="320" height="320" rx="72" fill="#f7fbf7"/>
+  <path d="M64 54h148c30 0 54 24 54 54v92c0 34-18 66-47 84l-59 36-59-36c-29-18-47-50-47-84V64c0-6 4-10 10-10Z" fill="#008751"/>
+  <path d="M113 74h94c18 0 32 14 32 32v90c0 24-13 47-34 60l-45 28-45-28c-21-13-34-36-34-60V106c0-18 14-32 32-32Z" fill="#ffffff"/>
+  <path d="M118 112h124v40H118z" fill="#0b2719" opacity=".1"/>
+  <path d="M126 124h108v16H126z" fill="#008751"/>
+  <path d="M112 172h96c9 0 16 7 16 16v38H96v-38c0-9 7-16 16-16Z" fill="#008751"/>
+  <path d="M123 199h74" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+  <path d="M138 199l18 18 32-40" fill="none" stroke="#ffc107" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="232" cy="74" r="32" fill="#ffc107"/>
+  <text x="232" y="84" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="800" fill="#0b2719">27</text>
+</svg>

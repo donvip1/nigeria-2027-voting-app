@@ -3,23 +3,23 @@
  Year Created:          2026
  Description:           Supabase seed data for starter candidates and public issue polls.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added simulation candidate records and starter poll options for the MVP launch.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added simulation candidate records, local portrait paths, party badge paths, and starter poll options.
 *********************************************************/
 
 -- ========================================================
 -- Simulation candidate seed records
 -- ========================================================
 
-insert into public.candidates (slug, name, party_name, party_code, running_mate, background_text, color)
+insert into public.candidates (slug, name, party_name, party_code, running_mate, background_text, color, logo_url, photo_url)
 values
-  ('apc-tinubu', 'Bola Ahmed Tinubu', 'All Progressives Congress', 'APC', 'Kashim Shettima', 'Simulation entry based on the project planning list. Current president and former Lagos State governor.', '#008751'),
-  ('adc-atiku', 'Atiku Abubakar', 'African Democratic Congress', 'ADC', 'TBA', 'Simulation entry based on the project planning list. Former vice president and long-running presidential contender.', '#1357a6'),
-  ('ndc-obi', 'Peter Obi', 'Nigeria Democratic Congress', 'NDC', 'TBA', 'Simulation entry based on the project planning list. Former Anambra State governor and 2023 presidential candidate.', '#d71920'),
-  ('prp-duke', 'Donald Duke', 'Peoples Redemption Party', 'PRP', 'TBA', 'Simulation entry based on the project planning list. Former Cross River State governor.', '#b3261e'),
-  ('sdp-adebayo', 'Prince Adewole Adebayo', 'Social Democratic Party', 'SDP', 'TBA', 'Simulation entry based on the project planning list. Social Democratic Party presidential figure.', '#0062a3'),
-  ('aac-sowore', 'Omoyele Sowore', 'African Action Congress', 'AAC', 'TBA', 'Simulation entry based on the project planning list. Activist, publisher, and African Action Congress figure.', '#f59f00'),
-  ('pdp-onor', 'Sandy Onor', 'Peoples Democratic Party', 'PDP', 'TBA', 'Simulation entry based on the project planning list. Former senator and Cross River political figure.', '#0b8f3a')
+  ('apc-tinubu', 'Bola Ahmed Tinubu', 'All Progressives Congress', 'APC', 'Kashim Shettima', 'Simulation entry based on the project planning list. Current president and former Lagos State governor.', '#008751', '/assets/party-badges/apc.svg', '/assets/candidates/apc-tinubu.svg'),
+  ('adc-atiku', 'Atiku Abubakar', 'African Democratic Congress', 'ADC', 'TBA', 'Simulation entry based on the project planning list. Former vice president and long-running presidential contender.', '#1357a6', '/assets/party-badges/adc.svg', '/assets/candidates/adc-atiku.svg'),
+  ('ndc-obi', 'Peter Obi', 'Nigeria Democratic Congress', 'NDC', 'TBA', 'Simulation entry based on the project planning list. Former Anambra State governor and 2023 presidential candidate.', '#d71920', '/assets/party-badges/ndc.svg', '/assets/candidates/ndc-obi.svg'),
+  ('prp-duke', 'Donald Duke', 'Peoples Redemption Party', 'PRP', 'TBA', 'Simulation entry based on the project planning list. Former Cross River State governor.', '#b3261e', '/assets/party-badges/prp.svg', '/assets/candidates/prp-duke.svg'),
+  ('sdp-adebayo', 'Prince Adewole Adebayo', 'Social Democratic Party', 'SDP', 'TBA', 'Simulation entry based on the project planning list. Social Democratic Party presidential figure.', '#0062a3', '/assets/party-badges/sdp.svg', '/assets/candidates/sdp-adebayo.svg'),
+  ('aac-sowore', 'Omoyele Sowore', 'African Action Congress', 'AAC', 'TBA', 'Simulation entry based on the project planning list. Activist, publisher, and African Action Congress figure.', '#f59f00', '/assets/party-badges/aac.svg', '/assets/candidates/aac-sowore.svg'),
+  ('pdp-onor', 'Sandy Onor', 'Peoples Democratic Party', 'PDP', 'TBA', 'Simulation entry based on the project planning list. Former senator and Cross River political figure.', '#0b8f3a', '/assets/party-badges/pdp.svg', '/assets/candidates/pdp-onor.svg')
 on conflict (slug) do update set
   name = excluded.name,
   party_name = excluded.party_name,
@@ -27,6 +27,8 @@ on conflict (slug) do update set
   running_mate = excluded.running_mate,
   background_text = excluded.background_text,
   color = excluded.color,
+  logo_url = excluded.logo_url,
+  photo_url = excluded.photo_url,
   is_active = true;
 
 -- ========================================================

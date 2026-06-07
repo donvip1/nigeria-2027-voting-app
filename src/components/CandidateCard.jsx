@@ -3,27 +3,38 @@
  Year Created:          2026
  Description:           Candidate display card for the presidential virtual ballot.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added candidate identity, vote count, running mate, and selection button.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added candidate illustration, party badge, vote count, running mate, and selection button.
 *********************************************************/
 
 // ========================================================
 // Imports
 // ========================================================
-import { CheckCircle2, UserRound } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import { getCandidatePortrait, getPartyBadge } from '../lib/candidateAssets';
 
 // ========================================================
 // Candidate card component
 // ========================================================
 export default function CandidateCard({ candidate, disabled, onSelect }) {
+  const portrait = getCandidatePortrait(candidate);
+  const partyBadge = getPartyBadge(candidate);
+
   return (
     <article className="candidate-card">
+      <div className="candidate-portrait-wrap">
+        <img className="candidate-portrait" src={portrait} alt={`${candidate.name} stylized simulation portrait`} />
+        {partyBadge && (
+          <img className="candidate-party-badge" src={partyBadge} alt={`${candidate.party_code} simulation party badge`} />
+        )}
+      </div>
+
       <div className="candidate-card__top">
-        <div className="candidate-avatar" style={{ '--candidate-color': candidate.color || '#008751' }}>
-          <UserRound aria-hidden="true" size={30} />
-        </div>
         <div>
-          <span className="party-code">{candidate.party_code}</span>
+          <span className="party-code party-code--with-badge">
+            {partyBadge && <img src={partyBadge} alt="" aria-hidden="true" />}
+            {candidate.party_code}
+          </span>
           <h3>{candidate.name}</h3>
           <p>{candidate.party_name}</p>
         </div>
