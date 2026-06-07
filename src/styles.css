@@ -1,0 +1,796 @@
+/*********************************************************
+ Author:                Philip Awazie Donvip
+ Year Created:          2026
+ Description:           Global visual styles for the Nigeria 2027 virtual voting frontend.
+ Modified By:           Philip Awazie Donvip
+ Modified Date:         2026-06-07
+ Modification Notes:    Added responsive layout, cards, forms, navigation, results, polls, and information page styling.
+*********************************************************/
+
+/* ========================================================
+   Base page theme and browser defaults
+   ======================================================== */
+:root {
+  color: #18211b;
+  background: #f5f7f2;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(0, 135, 81, 0.08), transparent 320px),
+    #f5f7f2;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  background: #008751;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 750;
+  min-height: 44px;
+  padding: 0 18px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(255, 193, 7, 0.7);
+  outline-offset: 2px;
+}
+
+/* ========================================================
+   Sticky header and main navigation tabs
+   ======================================================== */
+.site-header {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid rgba(24, 33, 27, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(14px);
+}
+
+.site-header__inner {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 16px 20px;
+}
+
+.site-header h1,
+.hero h2,
+.participant-panel h2,
+.section-heading h2,
+.results-summary h2,
+.modal h2 {
+  letter-spacing: 0;
+  margin: 0;
+}
+
+.site-header h1 {
+  font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+}
+
+.eyebrow {
+  color: #526359;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin: 0 0 5px;
+  text-transform: uppercase;
+}
+
+.tabs {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.tab {
+  align-items: center;
+  background: transparent;
+  color: #28352d;
+  display: inline-flex;
+  gap: 7px;
+  padding: 0 13px;
+}
+
+.tab--active {
+  background: #008751;
+  color: #ffffff;
+}
+
+.demo-ribbon {
+  background: #fff5d6;
+  border-bottom: 1px solid #f0d37a;
+  color: #4f3b00;
+  font-weight: 700;
+  padding: 10px 18px;
+  text-align: center;
+}
+
+/* ========================================================
+   Page shells and advertisement placeholders
+   ======================================================== */
+.page-shell {
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 22px 20px 46px;
+}
+
+.page-shell--narrow {
+  max-width: 920px;
+}
+
+.ad-slot {
+  align-items: center;
+  background: repeating-linear-gradient(
+    135deg,
+    #f0f2ec,
+    #f0f2ec 8px,
+    #e9ede5 8px,
+    #e9ede5 16px
+  );
+  border: 1px dashed #a8b3a7;
+  border-radius: 8px;
+  color: #59685d;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  min-height: 74px;
+  padding: 12px;
+  text-align: center;
+}
+
+.ad-slot--wide {
+  margin-top: 28px;
+}
+
+.ad-slot--rectangle {
+  margin-top: 28px;
+  min-height: 220px;
+}
+
+/* ========================================================
+   Shared cards, hero panel, and disclaimer blocks
+   ======================================================== */
+.hero,
+.participant-panel,
+.voter-status,
+.results-summary,
+.results-panel,
+.poll-card {
+  background: #ffffff;
+  border: 1px solid rgba(24, 33, 27, 0.09);
+  border-radius: 8px;
+  box-shadow: 0 18px 45px rgba(18, 35, 24, 0.07);
+}
+
+.hero {
+  align-items: center;
+  display: grid;
+  gap: 22px;
+  grid-template-columns: 1fr auto;
+  margin-top: 22px;
+  padding: 30px;
+}
+
+.hero h2 {
+  font-size: clamp(2rem, 5vw, 4.4rem);
+  line-height: 0.98;
+  max-width: 860px;
+}
+
+.hero p {
+  color: #516257;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  max-width: 780px;
+}
+
+.hero-stat {
+  align-items: center;
+  aspect-ratio: 1;
+  background: #0b2719;
+  border-radius: 8px;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 166px;
+  padding: 16px;
+  text-align: center;
+}
+
+.hero-stat span {
+  font-size: 3.3rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.hero-stat p {
+  color: #d6ecde;
+  font-size: 0.9rem;
+  margin: 8px 0 0;
+}
+
+.disclaimer {
+  align-items: flex-start;
+  background: #fffaf0;
+  border: 1px solid #efd99c;
+  border-radius: 8px;
+  color: #4d3d10;
+  display: flex;
+  gap: 10px;
+  line-height: 1.5;
+  margin: 18px 0;
+  padding: 14px 16px;
+}
+
+.disclaimer p {
+  margin: 0;
+}
+
+.disclaimer--compact {
+  font-size: 0.93rem;
+}
+
+.participant-panel {
+  align-items: flex-start;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: auto 1fr;
+  margin: 18px 0;
+  padding: 22px;
+}
+
+.participant-panel__icon {
+  align-items: center;
+  background: #e8f5ed;
+  border-radius: 8px;
+  color: #008751;
+  display: flex;
+  height: 54px;
+  justify-content: center;
+  width: 54px;
+}
+
+/* ========================================================
+   Participant form, notices, and status messages
+   ======================================================== */
+.participant-form {
+  grid-column: 1 / -1;
+}
+
+.participant-form label {
+  display: block;
+  font-weight: 750;
+  margin-bottom: 8px;
+}
+
+.inline-form {
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  background: #ffffff;
+  border: 1px solid #bfcbc0;
+  border-radius: 8px;
+  color: #17231b;
+  min-height: 44px;
+  padding: 0 12px;
+  width: 100%;
+}
+
+.muted,
+.section-heading p,
+.candidate-card__body,
+.candidate-card__meta,
+.site-footer,
+.poll-option small {
+  color: #5c6b61;
+}
+
+.form-error {
+  color: #b3261e;
+  font-weight: 700;
+  margin: 8px 0 0;
+}
+
+.notice {
+  background: #e9f2ff;
+  border: 1px solid #b8d7ff;
+  border-radius: 8px;
+  color: #143860;
+  font-weight: 700;
+  margin: 18px auto 0;
+  max-width: 920px;
+  padding: 12px 16px;
+}
+
+.notice--error {
+  background: #fff0ef;
+  border-color: #ffc7c2;
+  color: #8c1d18;
+}
+
+/* ========================================================
+   Candidate ballot layout and candidate cards
+   ======================================================== */
+.voter-status,
+.section-heading {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  margin: 22px 0;
+}
+
+.voter-status {
+  padding: 18px 20px;
+}
+
+.voter-status h2 {
+  margin: 0;
+}
+
+.status-pill,
+.party-code {
+  align-items: center;
+  background: #e9f5ef;
+  border-radius: 999px;
+  color: #006c43;
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 850;
+  min-height: 28px;
+  padding: 0 10px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-pill--done {
+  background: #0b2719;
+  color: #ffffff;
+}
+
+.section-heading h2 {
+  font-size: clamp(1.45rem, 3vw, 2.15rem);
+}
+
+.section-heading p {
+  max-width: 420px;
+}
+
+.candidate-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.candidate-card {
+  background: #ffffff;
+  border: 1px solid rgba(24, 33, 27, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 18px;
+}
+
+.candidate-card__top {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+}
+
+.candidate-avatar {
+  align-items: center;
+  background: color-mix(in srgb, var(--candidate-color) 14%, white);
+  border: 1px solid color-mix(in srgb, var(--candidate-color) 30%, white);
+  border-radius: 8px;
+  color: var(--candidate-color);
+  display: flex;
+  flex: 0 0 auto;
+  height: 66px;
+  justify-content: center;
+  width: 66px;
+}
+
+.candidate-card h3 {
+  margin: 8px 0 3px;
+}
+
+.candidate-card p {
+  margin: 0;
+}
+
+.candidate-card__body {
+  flex: 1;
+  line-height: 1.5;
+  margin: 16px 0;
+}
+
+.candidate-card__meta {
+  border-top: 1px solid #edf0eb;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+}
+
+.candidate-card__button {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+  width: 100%;
+}
+
+/* ========================================================
+   Vote confirmation modal
+   ======================================================== */
+.modal-backdrop {
+  align-items: center;
+  background: rgba(4, 12, 8, 0.66);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  z-index: 40;
+}
+
+.modal {
+  background: #ffffff;
+  border-radius: 8px;
+  max-width: 500px;
+  padding: 24px;
+  position: relative;
+  width: 100%;
+}
+
+.icon-button {
+  align-items: center;
+  background: #eef2ed;
+  color: #26362c;
+  display: inline-flex;
+  height: 40px;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0;
+  width: 40px;
+}
+
+.modal__close {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+}
+
+.confirmation-card {
+  background: #f4f8f4;
+  border: 1px solid #dbe8dc;
+  border-radius: 8px;
+  margin: 18px 0;
+  padding: 16px;
+}
+
+.confirmation-card h3 {
+  margin: 8px 0 4px;
+}
+
+.confirmation-card p {
+  margin: 0;
+}
+
+.modal__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.button-secondary {
+  background: #eef2ed;
+  color: #213229;
+}
+
+/* ========================================================
+   Results and progress bars
+   ======================================================== */
+.results-summary {
+  margin-top: 22px;
+  padding: 26px;
+}
+
+.results-summary h2 {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+.results-panel {
+  margin-top: 18px;
+  padding: 18px;
+}
+
+.result-row {
+  border-bottom: 1px solid #edf0eb;
+  padding: 16px 0;
+}
+
+.result-row:last-child {
+  border-bottom: 0;
+}
+
+.result-row__header,
+.poll-card__header {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.result-row__header > div {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rank {
+  color: #68766d;
+  font-weight: 800;
+}
+
+.progress {
+  background: #edf1ec;
+  border-radius: 999px;
+  height: 12px;
+  margin-top: 11px;
+  overflow: hidden;
+}
+
+.progress span {
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  min-width: 3px;
+}
+
+/* ========================================================
+   Public issue polls
+   ======================================================== */
+.poll-list {
+  display: grid;
+  gap: 16px;
+}
+
+.poll-card {
+  padding: 20px;
+}
+
+.poll-card__header h3 {
+  margin: 8px 0 0;
+}
+
+.poll-options {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.poll-option {
+  align-items: center;
+  background: #f8faf7;
+  border: 1px solid #dce4dc;
+  color: #1d2a22;
+  display: flex;
+  justify-content: space-between;
+  min-height: 58px;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.poll-option:hover:not(:disabled) {
+  background: #eef8f1;
+  border-color: #008751;
+}
+
+.poll-option span:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+/* ========================================================
+   Project information page
+   ======================================================== */
+.info-hero,
+.requirements-panel {
+  background: #ffffff;
+  border: 1px solid rgba(24, 33, 27, 0.09);
+  border-radius: 8px;
+  margin-top: 22px;
+  padding: 26px;
+}
+
+.info-hero h2 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  letter-spacing: 0;
+  line-height: 1;
+  margin: 0;
+}
+
+.info-hero p,
+.info-card p,
+.requirements-panel p,
+.requirements-panel li {
+  color: #5c6b61;
+  line-height: 1.55;
+}
+
+.info-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18px;
+}
+
+.info-card {
+  background: #ffffff;
+  border: 1px solid rgba(24, 33, 27, 0.09);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.info-card__icon {
+  align-items: center;
+  background: #e9f5ef;
+  border-radius: 8px;
+  color: #008751;
+  display: flex;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+.info-card h3,
+.requirements-panel h3 {
+  margin: 14px 0 8px;
+}
+
+.requirements-panel ul {
+  margin: 14px 0;
+  padding-left: 22px;
+}
+
+/* ========================================================
+   Empty states and footer
+   ======================================================== */
+.empty-state {
+  background: #ffffff;
+  border: 1px solid #e1e7e0;
+  border-radius: 8px;
+  color: #647368;
+  font-weight: 700;
+  padding: 28px;
+  text-align: center;
+}
+
+.site-footer {
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 0 20px 36px;
+}
+
+.site-footer .disclaimer {
+  margin-bottom: 12px;
+}
+
+.site-footer > p {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ========================================================
+   Tablet responsive layout
+   ======================================================== */
+@media (max-width: 860px) {
+  .site-header__inner,
+  .hero,
+  .voter-status,
+  .section-heading,
+  .result-row__header,
+  .poll-card__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .site-header__inner,
+  .hero {
+    display: flex;
+  }
+
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+  }
+
+  .tab {
+    justify-content: center;
+    padding: 0 8px;
+  }
+
+  .hero-stat {
+    aspect-ratio: auto;
+    min-width: 0;
+  }
+
+  .candidate-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ========================================================
+   Mobile responsive layout
+   ======================================================== */
+@media (max-width: 620px) {
+  .page-shell {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .candidate-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .participant-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .inline-form,
+  .modal__actions {
+    flex-direction: column;
+  }
+
+  .modal__actions button,
+  .inline-form button {
+    width: 100%;
+  }
+
+  .poll-option {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}

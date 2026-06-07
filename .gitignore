@@ -1,0 +1,25 @@
+# /*********************************************************
+#  Author:                Philip Awazie Donvip
+#  Year Created:          2026
+#  Description:           Git ignore rules for generated files, dependencies, and local secrets.
+#  Modified By:           Philip Awazie Donvip
+#  Modified Date:         2026-06-07
+#  Modification Notes:    Added ignore rules for dependencies, build output, environment files, and macOS metadata.
+# *********************************************************/
+
+# ========================================================
+# Installed dependencies and generated build output
+# ========================================================
+node_modules
+dist
+
+# ========================================================
+# Local environment secrets
+# ========================================================
+.env
+.env.local
+
+# ========================================================
+# Operating system metadata
+# ========================================================
+.DS_Store
