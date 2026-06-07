@@ -5,7 +5,7 @@
  Description:           Advertising and compliance notes for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-07
- Modification Notes:    Added AdSense-safe placement rules, readiness checklist, revenue caveats, and implementation notes.
+ Modification Notes:    Added AdSense-safe placement rules, readiness checklist, revenue caveats, publisher client ID, and implementation notes.
 *********************************************************/
 -->
 
@@ -56,4 +56,10 @@ AdSense revenue depends on approval, traffic quality, region, page RPM, content 
 
 ## Implementation Note
 
-Keep `AdSlot` placeholders until approval. After approval, replace those placeholders with AdSense components using your publisher client ID and slot IDs.
+The AdSense loader script is installed with this publisher client ID:
+
+```text
+ca-pub-1294576989935252
+```
+
+Keep `AdSlot` placeholders until approval or until specific ad-unit slot IDs are available. After approval, replace those placeholders with AdSense components using your publisher client ID and slot IDs.
