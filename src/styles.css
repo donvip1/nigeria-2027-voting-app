@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Global visual styles for the Nigeria 2027 virtual voting frontend.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added responsive layout, cards, forms, navigation, results, polls, and information page styling.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added responsive layout, cards, forms, navigation, results, polls, information, privacy, contact, and footer link styling.
 *********************************************************/
 
 /* ========================================================
@@ -46,6 +46,11 @@ button {
   font-weight: 750;
   min-height: 44px;
   padding: 0 18px;
+}
+
+a {
+  color: #006c43;
+  font-weight: 800;
 }
 
 button:disabled {
@@ -517,9 +522,28 @@ input {
   margin-top: 20px;
 }
 
+.inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
 .button-secondary {
   background: #eef2ed;
   color: #213229;
+}
+
+.button-link {
+  align-items: center;
+  background: #008751;
+  border-radius: 8px;
+  color: #ffffff;
+  display: inline-flex;
+  font-weight: 750;
+  min-height: 44px;
+  padding: 0 18px;
+  text-decoration: none;
 }
 
 /* ========================================================
@@ -690,6 +714,67 @@ input {
 }
 
 /* ========================================================
+   Privacy and contact pages
+   ======================================================== */
+.legal-hero,
+.legal-panel {
+  background: #ffffff;
+  border: 1px solid rgba(24, 33, 27, 0.09);
+  border-radius: 8px;
+  margin-top: 22px;
+  padding: 26px;
+}
+
+.legal-hero {
+  align-items: flex-start;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto 1fr;
+}
+
+.legal-hero__icon {
+  align-items: center;
+  background: #e9f5ef;
+  border-radius: 8px;
+  color: #008751;
+  display: flex;
+  height: 54px;
+  justify-content: center;
+  width: 54px;
+}
+
+.legal-hero h2 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  letter-spacing: 0;
+  line-height: 1;
+  margin: 0;
+}
+
+.legal-hero p,
+.legal-panel p,
+.legal-panel li {
+  color: #5c6b61;
+  line-height: 1.6;
+}
+
+.legal-panel h3 {
+  margin: 24px 0 8px;
+}
+
+.legal-panel h3:first-child {
+  margin-top: 0;
+}
+
+.legal-panel ul {
+  margin: 12px 0;
+  padding-left: 22px;
+}
+
+.contact-action {
+  margin: 16px 0 8px;
+}
+
+/* ========================================================
    Empty states and footer
    ======================================================== */
 .empty-state {
@@ -710,6 +795,22 @@ input {
 
 .site-footer .disclaimer {
   margin-bottom: 12px;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0 0 12px;
+}
+
+.text-link {
+  background: transparent;
+  color: #006c43;
+  font-weight: 850;
+  min-height: 0;
+  padding: 0;
+  text-decoration: underline;
 }
 
 .site-footer > p {
@@ -776,12 +877,14 @@ input {
   }
 
   .inline-form,
-  .modal__actions {
+  .modal__actions,
+  .inline-actions {
     flex-direction: column;
   }
 
   .modal__actions button,
-  .inline-form button {
+  .inline-form button,
+  .inline-actions button {
     width: 100%;
   }
 
@@ -791,6 +894,10 @@ input {
   }
 
   .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .legal-hero {
     grid-template-columns: 1fr;
   }
 }

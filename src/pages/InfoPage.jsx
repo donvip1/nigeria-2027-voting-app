@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Project information page for simulation, privacy, and launch requirements.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added information cards, launch checklist, and Supabase connection status.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added contact email, privacy page link, and updated launch readiness messaging.
 *********************************************************/
 
 // ========================================================
@@ -18,7 +18,7 @@ import { isSupabaseConfigured } from '../lib/supabase';
 // ========================================================
 // Information page component
 // ========================================================
-export default function InfoPage() {
+export default function InfoPage({ onNavigate }) {
   return (
     <main className="page-shell page-shell--narrow">
       <AdSlot />
@@ -56,10 +56,10 @@ export default function InfoPage() {
           </p>
         </InfoCard>
 
-        <InfoCard title="Contact placeholder" icon={<Mail aria-hidden="true" size={22} />}>
+        <InfoCard title="Contact" icon={<Mail aria-hidden="true" size={22} />}>
           <p>
-            Replace this with your real contact email before applying for AdSense or inviting public
-            traffic.
+            For questions, corrections, privacy requests, or general feedback, email{' '}
+            <a href="mailto:veezee4us@gmail.com">veezee4us@gmail.com</a>.
           </p>
         </InfoCard>
       </div>
@@ -70,13 +70,21 @@ export default function InfoPage() {
         <ul>
           <li>Supabase project URL and anon public key.</li>
           <li>GitHub and Vercel accounts for deployment.</li>
-          <li>Real contact email and privacy wording for the public site.</li>
+          <li>Public contact email and privacy policy are now available.</li>
           <li>Candidate photos and party logos if you want real visuals in v1.</li>
           <li>AdSense publisher ID after Google approves the site.</li>
         </ul>
         <p>
           Current data mode: <strong>{isSupabaseConfigured ? 'Supabase connected' : 'local demo mode'}</strong>.
         </p>
+        <div className="inline-actions">
+          <button type="button" onClick={() => onNavigate('privacy')}>
+            Read Privacy Policy
+          </button>
+          <button type="button" className="button-secondary" onClick={() => onNavigate('contact')}>
+            Contact Us
+          </button>
+        </div>
       </section>
     </main>
   );

@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Main app shell, page navigation, candidate loading, and global layout.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added demo-mode awareness, page switching, shared candidate state, and footer disclaimer.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added privacy and contact pages, footer navigation, and public compliance links.
 *********************************************************/
 
 // ========================================================
@@ -17,6 +17,8 @@ import VotePage from './pages/VotePage';
 import ResultsPage from './pages/ResultsPage';
 import PollsPage from './pages/PollsPage';
 import InfoPage from './pages/InfoPage';
+import PrivacyPage from './pages/PrivacyPage';
+import ContactPage from './pages/ContactPage';
 import { fetchCandidates } from './lib/api';
 import { getStoredParticipant } from './lib/fingerprint';
 import { isSupabaseConfigured } from './lib/supabase';
@@ -84,10 +86,22 @@ export default function App() {
         <PollsPage participant={participant} setParticipant={setParticipant} />
       )}
 
-      {currentPage === 'info' && <InfoPage />}
+      {currentPage === 'info' && <InfoPage onNavigate={setCurrentPage} />}
+
+      {currentPage === 'privacy' && <PrivacyPage />}
+
+      {currentPage === 'contact' && <ContactPage />}
 
       <footer className="site-footer">
         <Disclaimer compact />
+        <nav className="footer-links" aria-label="Footer navigation">
+          <button type="button" className="text-link" onClick={() => setCurrentPage('privacy')}>
+            Privacy Policy
+          </button>
+          <button type="button" className="text-link" onClick={() => setCurrentPage('contact')}>
+            Contact
+          </button>
+        </nav>
         <p>
           Nigeria 2027 Virtual Vote is built as a public simulation and educational product. Verify
           official election information with INEC and trusted primary sources.
