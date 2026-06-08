@@ -280,50 +280,37 @@ textarea:focus-visible {
 }
 
 .hero__visual {
-  display: grid;
-  gap: 14px;
-  grid-template-columns: 116px minmax(0, 1fr);
-  min-width: 0;
-}
-
-.hero-stat {
-  align-items: center;
-  aspect-ratio: 1;
-  background: #ffffff;
-  border-radius: 8px;
-  color: #0b1f17;
+  align-items: stretch;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 116px;
-  padding: 16px;
-  text-align: center;
-}
-
-.hero-stat span {
-  font-size: 3rem;
-  font-weight: 850;
-  line-height: 1;
-}
-
-.hero-stat p {
-  color: #435246;
-  font-size: 0.9rem;
-  margin: 8px 0 0;
-}
-
-.hero-portraits {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   min-width: 0;
+}
+
+.hero-carousel {
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.hero-carousel__track {
+  animation: heroCarousel 28s linear infinite;
+  display: flex;
+  gap: 10px;
+  min-width: max-content;
+  padding: 12px;
+}
+
+.hero-carousel:hover .hero-carousel__track {
+  animation-play-state: paused;
 }
 
 .hero-portrait {
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 5;
   background: #e7efe8;
   border: 2px solid rgba(255, 255, 255, 0.28);
   border-radius: 8px;
+  flex: 0 0 136px;
   overflow: hidden;
   position: relative;
 }
@@ -344,6 +331,16 @@ textarea:focus-visible {
   position: absolute;
   right: 7px;
   width: 34px;
+}
+
+@keyframes heroCarousel {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 5px));
+  }
 }
 
 .disclaimer {
@@ -1278,13 +1275,8 @@ textarea {
     padding: 0 8px;
   }
 
-  .hero-stat {
-    aspect-ratio: auto;
-    min-width: 0;
-  }
-
   .hero__visual {
-    grid-template-columns: 120px minmax(0, 1fr);
+    min-height: 190px;
   }
 
   .candidate-grid {
@@ -1334,25 +1326,11 @@ textarea {
   }
 
   .hero__visual {
-    grid-template-columns: 1fr;
+    min-height: 162px;
   }
 
-  .hero-stat {
-    align-items: center;
-    aspect-ratio: auto;
-    flex-direction: row;
-    gap: 10px;
-    justify-content: flex-start;
-    min-height: 72px;
-    text-align: left;
-  }
-
-  .hero-stat p {
-    margin: 0;
-  }
-
-  .hero-portraits {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .hero-portrait {
+    flex-basis: 112px;
   }
 
   .hero-portrait img:last-child:not(:first-child) {

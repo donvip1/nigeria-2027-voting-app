@@ -4,7 +4,7 @@
  Description:           Presidential virtual voting page and vote submission flow.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added passkey setup, local test reset, verification status, participant status, candidate selection, confirmation modal, and submission handling.
+ Modification Notes:    Added candidate image carousel, passkey setup, local test reset, verification status, participant status, candidate selection, confirmation modal, and submission handling.
 *********************************************************/
 
 // ========================================================
@@ -173,6 +173,8 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
   // ========================================================
   // Vote page layout
   // ========================================================
+  const carouselCandidates = candidates.length > 0 ? [...candidates, ...candidates] : [];
+
   return (
     <main className="page-shell">
       <AdSlot />
@@ -187,17 +189,15 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
           </p>
         </div>
         <div className="hero__visual" aria-label={`${candidates.length} simulation candidates loaded`}>
-          <div className="hero-stat">
-            <span>{candidates.length}</span>
-            <p>simulation tickets</p>
-          </div>
-          <div className="hero-portraits">
-            {candidates.slice(0, 4).map((candidate) => (
-              <div className="hero-portrait" key={candidate.id || candidate.slug}>
-                <img src={getCandidatePortrait(candidate)} alt="" aria-hidden="true" />
-                {getPartyBadge(candidate) && <img src={getPartyBadge(candidate)} alt="" aria-hidden="true" />}
-              </div>
-            ))}
+          <div className="hero-carousel">
+            <div className="hero-carousel__track">
+              {carouselCandidates.map((candidate, index) => (
+                <div className="hero-portrait" key={`${candidate.id || candidate.slug}-${index}`}>
+                  <img src={getCandidatePortrait(candidate)} alt="" aria-hidden="true" />
+                  {getPartyBadge(candidate) && <img src={getPartyBadge(candidate)} alt="" aria-hidden="true" />}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
