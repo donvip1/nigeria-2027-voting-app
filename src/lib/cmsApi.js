@@ -4,7 +4,7 @@
  Description:           CMS data access helpers for authenticated candidate editing.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added Supabase admin OTP login with deployed redirect, allow-list checks, candidate and poll loading, content updates, image uploads, and logout helpers.
+ Modification Notes:    Added Supabase admin OTP and password login with deployed redirect, allow-list checks, candidate and poll loading, content updates, image uploads, and logout helpers.
 *********************************************************/
 
 // ========================================================
@@ -39,6 +39,18 @@ export async function verifyCmsLoginCode(email, token) {
     email: email.trim().toLowerCase(),
     token: token.trim(),
     type: 'email'
+  });
+
+  if (error) throw error;
+  return data.session;
+}
+
+export async function signInCmsWithPassword(email, password) {
+  ensureCmsReady();
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email.trim().toLowerCase(),
+    password
   });
 
   if (error) throw error;

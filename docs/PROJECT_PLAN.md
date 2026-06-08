@@ -47,7 +47,7 @@ Build and launch a free-tier MVP for a Nigeria 2027 virtual voting simulation. T
 - Database: Supabase Postgres.
 - Security model: public reads for active content, vote submission through `security definer` RPC functions, no direct frontend vote table writes.
 - Auth: local passkey/WebAuthn support plus Supabase email OTP fallback.
-- CMS: Supabase Auth email OTP, `cms_admins` allow-list, RLS-protected candidate and poll updates, plus Supabase Storage for uploaded candidate assets.
+- CMS: Supabase Auth email OTP with password fallback, `cms_admins` allow-list, RLS-protected candidate and poll updates, plus Supabase Storage for uploaded candidate assets.
 - Deployment: Vercel frontend, Supabase backend.
 - Fallback: demo mode using local storage when Supabase env vars are missing.
 
@@ -80,7 +80,7 @@ Build and launch a free-tier MVP for a Nigeria 2027 virtual voting simulation. T
 - Configure Supabase email OTP delivery with built-in email or free SMTP.
 - Test the full passkey vote flow on HTTPS after each Vercel deployment.
 - Test the full email OTP vote flow after Supabase Auth email settings are confirmed.
-- Test the CMS login, candidate save, poll save, and image upload flow after `cms_admin_setup.sql` is run.
+- Test the CMS email-code login, password fallback login, candidate save, poll save, and image upload flow after `cms_admin_setup.sql` is run.
 - Add real AdSense slot IDs after AdSense approval.
 - Enable AdSense Auto Ads/vignette ads from the Google AdSense dashboard.
 - Submit the sitemap in Google Search Console.

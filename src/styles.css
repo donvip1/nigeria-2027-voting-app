@@ -1075,6 +1075,25 @@ textarea {
   margin-top: 16px;
 }
 
+.cms-login-divider {
+  align-items: center;
+  color: #647368;
+  display: flex;
+  font-size: 0.82rem;
+  font-weight: 850;
+  gap: 10px;
+  margin: 18px 0;
+  text-transform: uppercase;
+}
+
+.cms-login-divider::before,
+.cms-login-divider::after {
+  background: #d8e2d8;
+  content: "";
+  flex: 1;
+  height: 1px;
+}
+
 .cms-login-form label,
 .cms-form-grid label,
 .cms-textarea-label {

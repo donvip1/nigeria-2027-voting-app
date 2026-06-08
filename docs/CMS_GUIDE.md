@@ -5,7 +5,7 @@
  Description:           Beginner CMS guide for candidate and poll content editing.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added CMS setup, deployed redirect configuration, login, candidate editing, image upload, poll editing, and admin email management steps.
+ Modification Notes:    Added CMS setup, deployed redirect configuration, email code login, password fallback login, candidate editing, image upload, poll editing, and admin email management steps.
 *********************************************************/
 -->
 
@@ -73,7 +73,7 @@ Open the deployed app and go to:
 https://nigeria-2027-voting-app.vercel.app/cms
 ```
 
-Then:
+Then use the email code method:
 
 1. Enter the approved admin email.
 2. Click `Send code`.
@@ -82,6 +82,40 @@ Then:
 5. If the email contains only a `Sign in` link, click it after the Supabase `Site URL` and `Redirect URLs` above are set to the deployed Vercel site.
 
 If the email link opens `localhost` and shows `localhost refused to connect`, Supabase is still configured with the local development URL. Repeat the `URL Configuration` steps above.
+
+<!-- ========================================================
+     Password fallback login
+     ======================================================== -->
+
+## Set Up Password Login
+
+Use this if Supabase accepts the email code request but the email does not arrive.
+
+1. Open Supabase.
+2. Open your project.
+3. Go to `Authentication`.
+4. Click `Users`.
+5. Find this user:
+
+```text
+veezee4us@gmail.com
+```
+
+6. If the user does not exist, click `Add user`.
+7. Enter the same email address.
+8. Set a strong password.
+9. Make sure the user is confirmed.
+10. Save.
+
+Then open:
+
+```text
+https://nigeria-2027-voting-app.vercel.app/cms
+```
+
+Use the same email in `Admin email`, enter the password in `Admin password`, and click `Login`.
+
+The password login still checks the `cms_admins` table. A user can only access the CMS if the email is approved there.
 
 <!-- ========================================================
      Candidate editing

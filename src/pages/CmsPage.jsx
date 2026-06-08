@@ -4,7 +4,7 @@
  Description:           Lightweight CMS page for authenticated candidate content editing.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added email OTP admin login, admin allow-list verification, candidate and poll editor forms, candidate image uploads, and save/logout controls.
+ Modification Notes:    Added email OTP and password admin login, admin allow-list verification, candidate and poll editor forms, candidate image uploads, and save/logout controls.
 *********************************************************/
 
 // ========================================================
@@ -19,6 +19,7 @@ import {
   getCmsSession,
   logoutCms,
   sendCmsLoginCode,
+  signInCmsWithPassword,
   updateCmsCandidate,
   updateCmsPoll,
   updateCmsPollOption,
@@ -40,6 +41,7 @@ export default function CmsPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [email, setEmail] = useState('');
   const [token, setToken] = useState('');
+  const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [candidates, setCandidates] = useState([]);
@@ -51,6 +53,7 @@ export default function CmsPage() {
   const [uploadingAssetId, setUploadingAssetId] = useState('');
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  const [isSigningInWithPassword, setIsSigningInWithPassword] = useState(false);
 
   useEffect(() => {
     loadExistingSession();
@@ -128,6 +131,27 @@ export default function CmsPage() {
       setError(verifyError.message || 'Could not verify CMS login code.');
     } finally {
       setIsVerifyingCode(false);
+    }
+  }
+
+  async function handlePasswordLogin(event) {
+    event.preventDefault();
+    setIsSigningInWithPassword(true);
+    setMessage('');
+    setError('');
+
+    try {
+      const passwordSession = await signInCmsWithPassword(email, password);
+      const sessionEmail = passwordSession?.user?.email || email;
+      setSession(passwordSession);
+      setEmail(sessionEmail);
+      setMessage('CMS login verified.');
+      await loadAdminState(sessionEmail);
+      setPassword('');
+    } catch (passwordError) {
+      setError(passwordError.message || 'Could not sign in with password.');
+    } finally {
+      setIsSigningInWithPassword(false);
     }
   }
 
@@ -309,6 +333,29 @@ export default function CmsPage() {
               />
               <button type="submit" className="button-secondary" disabled={isVerifyingCode || !token.trim()}>
                 {isVerifyingCode ? 'Checking...' : 'Verify'}
+              </button>
+            </div>
+          </form>
+
+          <div className="cms-login-divider">or</div>
+
+          <form onSubmit={handlePasswordLogin} className="cms-login-form">
+            <label htmlFor="cms-password">Admin password</label>
+            <div className="inline-form">
+              <input
+                id="cms-password"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter password"
+                autoComplete="current-password"
+              />
+              <button
+                type="submit"
+                className="button-secondary"
+                disabled={isSigningInWithPassword || !email.trim() || !password}
+              >
+                {isSigningInWithPassword ? 'Checking...' : 'Login'}
               </button>
             </div>
           </form>
