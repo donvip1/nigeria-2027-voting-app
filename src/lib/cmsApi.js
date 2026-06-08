@@ -4,7 +4,7 @@
  Description:           CMS data access helpers for authenticated candidate editing.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added Supabase admin OTP login with deployed redirect, allow-list checks, candidate loading, candidate updates, and logout helpers.
+ Modification Notes:    Added Supabase admin OTP login with deployed redirect, allow-list checks, candidate and poll loading, content updates, and logout helpers.
 *********************************************************/
 
 // ========================================================
@@ -82,6 +82,23 @@ export async function fetchCmsCandidates() {
   return data || [];
 }
 
+export async function fetchCmsPolls() {
+  ensureCmsReady();
+
+  const { data, error } = await supabase
+    .from('polls')
+    .select('id, title, type, is_active, created_at, poll_options(id, option_text, vote_count, sort_order)')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return (data || []).map((poll) => ({
+    ...poll,
+    poll_options: [...(poll.poll_options || [])].sort(
+      (firstOption, secondOption) => Number(firstOption.sort_order || 0) - Number(secondOption.sort_order || 0)
+    )
+  }));
+}
+
 export async function updateCmsCandidate(candidateId, updates) {
   ensureCmsReady();
 
@@ -99,6 +116,41 @@ export async function updateCmsCandidate(candidateId, updates) {
       is_active: updates.is_active
     })
     .eq('id', candidateId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function updateCmsPoll(pollId, updates) {
+  ensureCmsReady();
+
+  const { data, error } = await supabase
+    .from('polls')
+    .update({
+      title: updates.title,
+      type: updates.type,
+      is_active: updates.is_active
+    })
+    .eq('id', pollId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function updateCmsPollOption(optionId, updates) {
+  ensureCmsReady();
+
+  const { data, error } = await supabase
+    .from('poll_options')
+    .update({
+      option_text: updates.option_text,
+      sort_order: Number(updates.sort_order) || 0
+    })
+    .eq('id', optionId)
     .select()
     .single();
 
