@@ -4,7 +4,7 @@
  Description:           Participant identity, duplicate-vote markers, and lightweight fingerprint helpers.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Improved passkey availability, passkey registration, OTP-aware participant storage, vote-state preservation, poll vote tracking, IP lookup, and browser fingerprinting.
+ Modification Notes:    Improved passkey availability, passkey registration, OTP-aware participant storage, local test vote reset, vote-state preservation, poll vote tracking, IP lookup, and browser fingerprinting.
 *********************************************************/
 
 // ========================================================
@@ -204,6 +204,15 @@ export function hasVotedInPoll(optionGroupId) {
 
 export function markPollVote(optionGroupId) {
   localStorage.setItem(`n27_poll_${optionGroupId}`, 'true');
+}
+
+export function clearLocalVoteMarkers() {
+  localStorage.removeItem('n27_presidential_vote');
+  localStorage.removeItem('n27_presidential_candidate');
+
+  Object.keys(localStorage)
+    .filter((key) => key.startsWith('n27_poll_'))
+    .forEach((key) => localStorage.removeItem(key));
 }
 
 // ========================================================

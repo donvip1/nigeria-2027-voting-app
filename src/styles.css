@@ -588,6 +588,12 @@ textarea {
   color: #8c1d18;
 }
 
+.notice--warning {
+  background: #fff8e5;
+  border-color: #f0d37a;
+  color: #4f3b00;
+}
+
 /* ========================================================
    Candidate ballot layout and candidate cards
    ======================================================== */

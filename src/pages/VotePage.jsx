@@ -4,14 +4,14 @@
  Description:           Presidential virtual voting page and vote submission flow.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added passkey setup and verification status, participant status, candidate selection, confirmation modal, and submission handling.
+ Modification Notes:    Added passkey setup, local test reset, verification status, participant status, candidate selection, confirmation modal, and submission handling.
 *********************************************************/
 
 // ========================================================
 // Imports, components, and API helpers
 // ========================================================
 import { useState } from 'react';
-import { Fingerprint } from 'lucide-react';
+import { Fingerprint, RotateCcw } from 'lucide-react';
 import AdSlot from '../components/AdSlot';
 import CandidateCard from '../components/CandidateCard';
 import Disclaimer from '../components/Disclaimer';
@@ -20,12 +20,14 @@ import VoterVerificationPanel from '../components/VoterVerificationPanel';
 import VoteConfirmation from '../components/VoteConfirmation';
 import { submitPresidentialVote } from '../lib/api';
 import { getCandidatePortrait, getPartyBadge } from '../lib/candidateAssets';
-import { registerParticipantPasskey, saveParticipant, verifyStoredPasskey } from '../lib/fingerprint';
+import { clearLocalVoteMarkers, registerParticipantPasskey, saveParticipant, verifyStoredPasskey } from '../lib/fingerprint';
 
 // ========================================================
 // Vote page component and local vote state
 // ========================================================
 export default function VotePage({ candidates, participant, setParticipant, onRefresh, loading }) {
+  const totalVotes = candidates.reduce((sum, candidate) => sum + Number(candidate.vote_count || 0), 0);
+  const hasLocalOnlyVoteMarker = Boolean(participant?.hasVoted && totalVotes === 0);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -128,6 +130,15 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
     setError('');
   }
 
+  function handleClearLocalVoteMarkers() {
+    clearLocalVoteMarkers();
+    setParticipant({
+      ...participant,
+      hasVoted: false
+    });
+    setVerificationMessage('Local test vote marker cleared on this browser.');
+  }
+
   // ========================================================
   // Confirm and submit selected presidential candidate
   // ========================================================
@@ -220,6 +231,16 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
                 {isVerifyingPasskey ? 'Verifying...' : 'Verify fingerprint'}
               </button>
             )}
+            {hasLocalOnlyVoteMarker && (
+              <button
+                type="button"
+                className="button-secondary button-secondary--icon"
+                onClick={handleClearLocalVoteMarkers}
+              >
+                <RotateCcw aria-hidden="true" size={17} />
+                <span>Clear local test vote</span>
+              </button>
+            )}
             {!participant.hasPasskey && (
               <button
                 type="button"
@@ -245,6 +266,11 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
 
       {loading ? (
         <div className="empty-state">Loading candidates...</div>
+      ) : hasLocalOnlyVoteMarker ? (
+        <div className="notice notice--warning">
+          Supabase vote totals are reset, but this browser still has an old local test vote marker.
+          Click `Clear local test vote` above to vote again on this browser.
+        </div>
       ) : (
         <div className="candidate-grid">
           {candidates.map((candidate) => (

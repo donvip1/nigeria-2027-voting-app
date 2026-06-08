@@ -52,6 +52,24 @@ veezee4us@gmail.com
 
 You can add another admin later by inserting another row into `public.cms_admins`.
 
+Set the deployed auth redirect:
+
+1. Go to Supabase `Authentication`.
+2. Open `URL Configuration`.
+3. Set `Site URL` to:
+
+```text
+https://nigeria-2027-voting-app.vercel.app
+```
+
+4. Add this `Redirect URL`:
+
+```text
+https://nigeria-2027-voting-app.vercel.app/**
+```
+
+5. Save.
+
 <!-- ========================================================
      Enable OTP authentication
      ======================================================== -->
@@ -152,9 +170,10 @@ This keeps:
 After resetting Supabase, also clear your browser test data if your own browser still says you already voted:
 
 1. Open the deployed app in your browser.
-2. Open browser settings for the site.
-3. Clear site data or local storage for the app domain.
-4. Reload the app and test with a fresh nickname.
+2. If the app shows `Clear local test vote`, click it.
+3. If it still says you already voted, open browser settings for the site.
+4. Clear site data or local storage for the app domain.
+5. Reload the app and test with a fresh nickname.
 
 <!-- ========================================================
      Configure frontend environment variables
