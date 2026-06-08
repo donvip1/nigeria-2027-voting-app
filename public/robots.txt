@@ -1,0 +1,17 @@
+# /*********************************************************
+#  Author:                Philip Awazie Donvip
+#  Year Created:          2026
+#  Description:           Search crawler directives for the Nigeria 2027 virtual voting app.
+#  Modified By:           Philip Awazie Donvip
+#  Modified Date:         2026-06-08
+#  Modification Notes:    Added public crawl rules and sitemap location.
+# *********************************************************/
+
+# ========================================================
+# Public crawler access
+# ========================================================
+User-agent: *
+Allow: /
+Disallow: /cms
+
+Sitemap: https://nigeria-2027-voting-app.vercel.app/sitemap.xml

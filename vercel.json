@@ -1,0 +1,28 @@
+{
+  "rewrites": [
+    {
+      "source": "/results",
+      "destination": "/"
+    },
+    {
+      "source": "/polls",
+      "destination": "/"
+    },
+    {
+      "source": "/info",
+      "destination": "/"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/"
+    },
+    {
+      "source": "/contact",
+      "destination": "/"
+    },
+    {
+      "source": "/cms",
+      "destination": "/"
+    }
+  ]
+}

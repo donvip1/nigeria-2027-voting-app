@@ -68,7 +68,7 @@ https://nigeria-2027-voting-app.vercel.app/**
 Open the deployed app and go to:
 
 ```text
-https://nigeria-2027-voting-app.vercel.app/#cms
+https://nigeria-2027-voting-app.vercel.app/cms
 ```
 
 Then:

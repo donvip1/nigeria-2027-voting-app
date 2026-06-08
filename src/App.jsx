@@ -4,7 +4,7 @@
  Description:           Main app shell, page navigation, candidate loading, and global layout.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added privacy, contact, CMS page routing, footer navigation, and public compliance links.
+ Modification Notes:    Added privacy, contact, CMS page routing, clean URL and hash navigation, footer navigation, and public compliance links.
 *********************************************************/
 
 // ========================================================
@@ -30,7 +30,7 @@ const routablePages = ['vote', 'results', 'polls', 'info', 'privacy', 'contact',
 // Main application component and shared state
 // ========================================================
 export default function App() {
-  const [currentPage, setCurrentPage] = useState(getHashPage());
+  const [currentPage, setCurrentPage] = useState(getRoutePage());
   const [candidates, setCandidates] = useState([]);
   const [participant, setParticipant] = useState(null);
   const [loadingCandidates, setLoadingCandidates] = useState(true);
@@ -40,14 +40,16 @@ export default function App() {
     setParticipant(getStoredParticipant());
     refreshCandidates();
 
-    function handleHashChange() {
-      setCurrentPage(getHashPage());
+    function handleRouteChange() {
+      setCurrentPage(getRoutePage());
     }
 
-    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('hashchange', handleRouteChange);
+    window.addEventListener('popstate', handleRouteChange);
 
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('popstate', handleRouteChange);
     };
   }, []);
 
@@ -56,9 +58,15 @@ export default function App() {
   // ========================================================
   function handleNavigate(page) {
     setCurrentPage(page);
-    if (window.location.hash !== `#${page}`) {
-      window.location.hash = page;
+    const nextPath = page === 'vote' ? '/' : `/${page}`;
+    if (window.location.pathname !== nextPath) {
+      window.history.pushState(null, '', nextPath);
     }
+  }
+
+  function handleFooterNavigate(event, page) {
+    event.preventDefault();
+    handleNavigate(page);
   }
 
   // ========================================================
@@ -120,13 +128,25 @@ export default function App() {
       <footer className="site-footer">
         <Disclaimer compact />
         <nav className="footer-links" aria-label="Footer navigation">
-          <a href="#privacy" className="text-link" onClick={() => handleNavigate('privacy')}>
+          <a
+            href="/privacy"
+            className="text-link"
+            onClick={(event) => handleFooterNavigate(event, 'privacy')}
+          >
             Privacy Policy
           </a>
-          <a href="#contact" className="text-link" onClick={() => handleNavigate('contact')}>
+          <a
+            href="/contact"
+            className="text-link"
+            onClick={(event) => handleFooterNavigate(event, 'contact')}
+          >
             Contact
           </a>
-          <a href="#cms" className="text-link" onClick={() => handleNavigate('cms')}>
+          <a
+            href="/cms"
+            className="text-link"
+            onClick={(event) => handleFooterNavigate(event, 'cms')}
+          >
             CMS
           </a>
         </nav>
@@ -140,9 +160,12 @@ export default function App() {
 }
 
 // ========================================================
-// Hash route resolver
+// Path and hash route resolver
 // ========================================================
-function getHashPage() {
+function getRoutePage() {
+  const pathPage = window.location.pathname.replace('/', '');
+  if (routablePages.includes(pathPage)) return pathPage;
+
   const hashPage = window.location.hash.replace('#', '');
   return routablePages.includes(hashPage) ? hashPage : 'vote';
 }

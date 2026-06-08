@@ -60,7 +60,7 @@ export async function requestOtpCode({ contactType, contact }) {
       : {
           email: normalizedContact,
           options: {
-            emailRedirectTo: `${window.location.origin}/#vote`
+            emailRedirectTo: window.location.origin
           }
         };
 

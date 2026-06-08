@@ -21,7 +21,7 @@ export async function sendCmsLoginCode(email) {
   const { error } = await supabase.auth.signInWithOtp({
     email: email.trim().toLowerCase(),
     options: {
-      emailRedirectTo: `${window.location.origin}/#cms`
+      emailRedirectTo: `${window.location.origin}/cms`
     }
   });
 
