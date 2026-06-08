@@ -1,14 +1,14 @@
 /*********************************************************
  Author:                Philip Awazie Donvip
  Year Created:          2026
- Description:           Supabase seed data for starter candidates and public issue polls.
+ Description:           Supabase patch for updating simulation candidate ticket data.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added simulation candidate records, full running-mate ticket data, real candidate image paths, party logo paths, and starter poll options.
+ Modification Notes:    Added safe candidate-only upsert for running mates, descriptions, portraits, party logos, and active status.
 *********************************************************/
 
 -- ========================================================
--- Simulation candidate seed records
+-- Candidate-only ticket update records
 -- ========================================================
 
 insert into public.candidates (slug, name, party_name, party_code, running_mate, background_text, color, logo_url, photo_url)
@@ -30,39 +30,3 @@ on conflict (slug) do update set
   logo_url = excluded.logo_url,
   photo_url = excluded.photo_url,
   is_active = true;
-
--- ========================================================
--- Multiple-choice public issue poll seed
--- ========================================================
-
-with inserted_poll as (
-  insert into public.polls (title, type)
-  values ('Which issue should the next president prioritize first?', 'multiple_choice')
-  returning id
-)
-insert into public.poll_options (poll_id, option_text, sort_order)
-select inserted_poll.id, option_text, sort_order
-from inserted_poll,
-(values
-  ('Economy and jobs', 1),
-  ('Security', 2),
-  ('Electricity and infrastructure', 3),
-  ('Education', 4)
-) as options(option_text, sort_order);
-
--- ========================================================
--- Yes/no public debate poll seed
--- ========================================================
-
-with inserted_poll as (
-  insert into public.polls (title, type)
-  values ('Should all simulation candidates join a public debate?', 'yes_no')
-  returning id
-)
-insert into public.poll_options (poll_id, option_text, sort_order)
-select inserted_poll.id, option_text, sort_order
-from inserted_poll,
-(values
-  ('Yes', 1),
-  ('No', 2)
-) as options(option_text, sort_order);

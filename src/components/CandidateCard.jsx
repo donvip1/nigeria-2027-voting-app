@@ -4,7 +4,7 @@
  Description:           Candidate display card for the presidential virtual ballot.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added candidate illustration, party badge, vote count, running mate, and selection button.
+ Modification Notes:    Added candidate portrait, party badge, simulation ticket display, vote count, running mate, and selection button states.
 *********************************************************/
 
 // ========================================================
@@ -16,7 +16,7 @@ import { getCandidatePortrait, getPartyBadge } from '../lib/candidateAssets';
 // ========================================================
 // Candidate card component
 // ========================================================
-export default function CandidateCard({ candidate, disabled, onSelect }) {
+export default function CandidateCard({ candidate, disabled, disabledReason = 'Unavailable', onSelect }) {
   const portrait = getCandidatePortrait(candidate);
   const partyBadge = getPartyBadge(candidate);
 
@@ -42,8 +42,14 @@ export default function CandidateCard({ candidate, disabled, onSelect }) {
 
       <p className="candidate-card__body">{candidate.background_text}</p>
 
+      <div className="ticket-pair">
+        <span>Simulation ticket</span>
+        <strong>{candidate.name}</strong>
+        <small>{candidate.running_mate || 'Running mate pending'}</small>
+      </div>
+
       <div className="candidate-card__meta">
-        <span>Running mate: {candidate.running_mate || 'TBA'}</span>
+        <span>Running mate: {candidate.running_mate || 'Pending confirmation'}</span>
         <strong>{Number(candidate.vote_count || 0).toLocaleString()} votes</strong>
       </div>
 
@@ -54,7 +60,7 @@ export default function CandidateCard({ candidate, disabled, onSelect }) {
         disabled={disabled}
       >
         <CheckCircle2 aria-hidden="true" size={17} />
-        <span>{disabled ? 'Already voted' : 'Select candidate'}</span>
+        <span>{disabled ? disabledReason : 'Select ticket'}</span>
       </button>
     </article>
   );

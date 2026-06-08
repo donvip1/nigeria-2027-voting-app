@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Supabase database schema for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added participants, candidates, votes, polls, RLS policies, read views, and secure RPC vote submission functions.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added participants, candidates, votes, polls, RLS policies, read views, secure RPC vote submission functions, and extension-free vote hashing.
 *********************************************************/
 
 -- ========================================================
@@ -207,7 +207,7 @@ begin
     candidate_uuid,
     ip_value,
     voter_fingerprint,
-    encode(digest(participant_uuid::text || candidate_uuid::text || now()::text, 'sha256'), 'hex')
+    md5(participant_uuid::text || candidate_uuid::text || voter_fingerprint || clock_timestamp()::text)
   );
 
   return jsonb_build_object('ok', true);

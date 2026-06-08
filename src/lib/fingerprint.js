@@ -4,7 +4,7 @@
  Description:           Participant identity, duplicate-vote markers, and lightweight fingerprint helpers.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added passkey-backed fingerprint verification, local participant storage, poll vote tracking, IP lookup, and browser fingerprinting.
+ Modification Notes:    Improved passkey availability, passkey registration, vote-state preservation, local participant storage, poll vote tracking, IP lookup, and browser fingerprinting.
 *********************************************************/
 
 // ========================================================
@@ -50,7 +50,7 @@ export function saveParticipant(nickname, passkeyData = null) {
   return {
     nickname: trimmedNickname,
     fingerprint,
-    hasVoted: false,
+    hasVoted: localStorage.getItem('n27_presidential_vote') === 'true',
     hasPasskey: Boolean(passkeyData?.credentialId || localStorage.getItem('n27_passkey_credential_id')),
     passkeyCredentialId: passkeyData?.credentialId || localStorage.getItem('n27_passkey_credential_id'),
     passkeyVerifiedAt: passkeyData?.verifiedAt || localStorage.getItem('n27_passkey_verified_at')
@@ -78,22 +78,22 @@ export async function getPasskeyAvailability() {
   if (!PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
     return {
       available: true,
-      reason: 'This browser supports passkeys, but device availability could not be pre-checked.'
+      reason: 'This browser supports passkeys. Click the button to open your device or account passkey prompt.'
     };
   }
 
   try {
     const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
     return {
-      available,
+      available: true,
       reason: available
         ? 'Fingerprint/passkey sign-in is available on this device.'
-        : 'No built-in fingerprint/passkey authenticator was found on this device.'
+        : 'A built-in fingerprint sensor was not detected, but your browser may still offer passkeys from your phone, password manager, or security key.'
     };
   } catch {
     return {
-      available: false,
-      reason: 'Fingerprint/passkey availability could not be checked.'
+      available: true,
+      reason: 'Passkey support could not be pre-checked. Click the button to try your browser prompt.'
     };
   }
 }
@@ -102,6 +102,14 @@ export async function getPasskeyAvailability() {
 // Passkey registration and local verification helpers
 // ========================================================
 export async function registerParticipantPasskey(nickname) {
+  if (!window.isSecureContext) {
+    throw new Error('Fingerprint/passkey setup requires HTTPS or localhost.');
+  }
+
+  if (!window.PublicKeyCredential || !navigator.credentials?.create) {
+    throw new Error('This browser does not support fingerprint/passkey setup.');
+  }
+
   const publicKeyCredential = await navigator.credentials.create({
     publicKey: {
       challenge: createRandomBytes(),
@@ -118,7 +126,6 @@ export async function registerParticipantPasskey(nickname) {
         { type: 'public-key', alg: -257 }
       ],
       authenticatorSelection: {
-        authenticatorAttachment: 'platform',
         residentKey: 'preferred',
         userVerification: 'required'
       },
@@ -142,6 +149,14 @@ export async function verifyStoredPasskey() {
 
   if (!credentialId) {
     throw new Error('No fingerprint/passkey credential is saved on this device.');
+  }
+
+  if (!window.isSecureContext) {
+    throw new Error('Fingerprint/passkey verification requires HTTPS or localhost.');
+  }
+
+  if (!window.PublicKeyCredential || !navigator.credentials?.get) {
+    throw new Error('This browser does not support fingerprint/passkey verification.');
   }
 
   const assertion = await navigator.credentials.get({

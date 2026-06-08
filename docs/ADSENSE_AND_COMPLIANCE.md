@@ -4,8 +4,8 @@
  Year Created:          2026
  Description:           Advertising and compliance notes for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added AdSense-safe placement rules, readiness checklist, revenue caveats, publisher client ID, and implementation notes.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added AdSense-safe placement rules, readiness checklist, ads.txt setup, revenue caveats, publisher client ID, slot variables, and implementation notes.
 *********************************************************/
 -->
 
@@ -62,4 +62,22 @@ The AdSense loader script is installed with this publisher client ID:
 ca-pub-1294576989935252
 ```
 
-Keep `AdSlot` placeholders until approval or until specific ad-unit slot IDs are available. After approval, replace those placeholders with AdSense components using your publisher client ID and slot IDs.
+The required `ads.txt` file is available at:
+
+```text
+https://your-domain.com/ads.txt
+```
+
+For this project, it contains:
+
+```text
+google.com, pub-1294576989935252, DIRECT, f08c47fec0942fa0
+```
+
+Keep `AdSlot` placeholders until approval or until specific ad-unit slot IDs are available. After approval, create display ad units in AdSense and add the slot IDs to Vercel:
+
+```bash
+VITE_ADSENSE_BANNER_SLOT=
+VITE_ADSENSE_WIDE_SLOT=
+VITE_ADSENSE_RECTANGLE_SLOT=
+```

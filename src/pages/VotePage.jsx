@@ -4,20 +4,22 @@
  Description:           Presidential virtual voting page and vote submission flow.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added passkey verification status, participant status, candidate selection, confirmation modal, and submission handling.
+ Modification Notes:    Added passkey setup and verification status, participant status, candidate selection, confirmation modal, and submission handling.
 *********************************************************/
 
 // ========================================================
 // Imports, components, and API helpers
 // ========================================================
 import { useState } from 'react';
+import { Fingerprint } from 'lucide-react';
 import AdSlot from '../components/AdSlot';
 import CandidateCard from '../components/CandidateCard';
 import Disclaimer from '../components/Disclaimer';
 import ParticipantForm from '../components/ParticipantForm';
 import VoteConfirmation from '../components/VoteConfirmation';
 import { submitPresidentialVote } from '../lib/api';
-import { verifyStoredPasskey } from '../lib/fingerprint';
+import { getCandidatePortrait, getPartyBadge } from '../lib/candidateAssets';
+import { registerParticipantPasskey, saveParticipant, verifyStoredPasskey } from '../lib/fingerprint';
 
 // ========================================================
 // Vote page component and local vote state
@@ -27,7 +29,29 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [verificationMessage, setVerificationMessage] = useState('');
+  const [isSettingUpPasskey, setIsSettingUpPasskey] = useState(false);
   const [isVerifyingPasskey, setIsVerifyingPasskey] = useState(false);
+
+  // ========================================================
+  // Existing participant passkey setup handler
+  // ========================================================
+  async function handleSetupPasskey() {
+    if (!participant?.nickname) return;
+
+    setIsSettingUpPasskey(true);
+    setVerificationMessage('Waiting for your device fingerprint/passkey setup prompt...');
+
+    try {
+      const passkeyData = await registerParticipantPasskey(participant.nickname);
+      const upgradedParticipant = saveParticipant(participant.nickname, passkeyData);
+      setParticipant(upgradedParticipant);
+      setVerificationMessage('Fingerprint/passkey sign-in is now saved for this device.');
+    } catch (passkeyError) {
+      setVerificationMessage(readablePasskeyError(passkeyError));
+    } finally {
+      setIsSettingUpPasskey(false);
+    }
+  }
 
   // ========================================================
   // Stored passkey re-verification handler
@@ -86,17 +110,27 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
       <AdSlot />
 
       <section className="hero">
-        <div>
+        <div className="hero__copy">
           <p className="eyebrow">Nigeria 2027 preference poll</p>
-          <h2>Cast one virtual vote and watch public results update.</h2>
+          <h2>Choose a presidential ticket in the public simulation.</h2>
           <p>
-            A lightweight simulation for measuring visitor sentiment. The app protects against
-            casual duplicate voting, but it is not an official election platform.
+            Review each candidate, running mate, and party badge before submitting one virtual
+            preference vote. This is public sentiment software, not an official election platform.
           </p>
         </div>
-        <div className="hero-stat">
-          <span>{candidates.length}</span>
-          <p>simulation candidates loaded</p>
+        <div className="hero__visual" aria-label={`${candidates.length} simulation candidates loaded`}>
+          <div className="hero-stat">
+            <span>{candidates.length}</span>
+            <p>simulation tickets</p>
+          </div>
+          <div className="hero-portraits">
+            {candidates.slice(0, 4).map((candidate) => (
+              <div className="hero-portrait" key={candidate.id || candidate.slug}>
+                <img src={getCandidatePortrait(candidate)} alt="" aria-hidden="true" />
+                {getPartyBadge(candidate) && <img src={getPartyBadge(candidate)} alt="" aria-hidden="true" />}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -127,6 +161,17 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
                 {isVerifyingPasskey ? 'Verifying...' : 'Verify fingerprint'}
               </button>
             )}
+            {!participant.hasPasskey && (
+              <button
+                type="button"
+                className="button-secondary button-secondary--icon"
+                onClick={handleSetupPasskey}
+                disabled={isSettingUpPasskey}
+              >
+                <Fingerprint aria-hidden="true" size={17} />
+                <span>{isSettingUpPasskey ? 'Waiting for device...' : 'Set up fingerprint/passkey'}</span>
+              </button>
+            )}
           </div>
         </section>
       )}
@@ -134,9 +179,9 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
       <section className="section-heading">
         <div>
           <p className="eyebrow">Ballot simulation</p>
-          <h2>Select your preferred candidate</h2>
+          <h2>Select your preferred ticket</h2>
         </div>
-        <p>Candidate data is editable seed content and should be updated when official lists exist.</p>
+        <p>Candidate data is editable simulation content and should be updated when final official lists exist.</p>
       </section>
 
       {loading ? (
@@ -148,6 +193,7 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
               key={candidate.id}
               candidate={candidate}
               disabled={!participant || participant.hasVoted}
+              disabledReason={!participant ? 'Sign in first' : 'Already voted'}
               onSelect={setSelectedCandidate}
             />
           ))}
@@ -175,6 +221,10 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
 // ========================================================
 function readableVoteError(error) {
   const message = error?.message || 'Vote submission failed.';
+
+  if (message.includes('function digest')) {
+    return 'Database setup needs the latest Supabase vote-function patch. Run supabase/fix_vote_hash_function.sql in Supabase SQL Editor, then submit again.';
+  }
 
   if (message.includes('duplicate')) {
     return 'This device or nickname has already submitted a presidential virtual vote.';

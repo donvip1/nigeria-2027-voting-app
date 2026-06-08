@@ -11,8 +11,8 @@
    Base page theme and browser defaults
    ======================================================== */
 :root {
-  color: #18211b;
-  background: #f5f7f2;
+  color: #151c18;
+  background: #f3f5f0;
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-synthesis: none;
@@ -28,8 +28,9 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    linear-gradient(180deg, rgba(0, 135, 81, 0.08), transparent 320px),
-    #f5f7f2;
+    linear-gradient(180deg, rgba(0, 135, 81, 0.11), transparent 360px),
+    linear-gradient(90deg, rgba(255, 193, 7, 0.09), transparent 48%, rgba(19, 87, 166, 0.08)),
+    #f3f5f0;
 }
 
 button,
@@ -68,7 +69,7 @@ input:focus-visible {
    Sticky header and main navigation tabs
    ======================================================== */
 .site-header {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   border-bottom: 1px solid rgba(24, 33, 27, 0.1);
   position: sticky;
   top: 0;
@@ -107,9 +108,12 @@ input:focus-visible {
 }
 
 .brand-logo {
+  background: #ffffff;
+  border: 1px solid rgba(0, 135, 81, 0.18);
   border-radius: 8px;
   display: block;
   height: 54px;
+  padding: 3px;
   width: 54px;
 }
 
@@ -138,7 +142,7 @@ input:focus-visible {
 }
 
 .tab--active {
-  background: #008751;
+  background: #0b1f17;
   color: #ffffff;
 }
 
@@ -184,6 +188,18 @@ input:focus-visible {
   text-align: center;
 }
 
+.ad-slot--live {
+  background: #ffffff;
+  border-style: solid;
+  display: block;
+  min-height: 90px;
+  padding: 0;
+}
+
+.ad-slot--live .adsbygoogle {
+  min-height: inherit;
+}
+
 .ad-slot--wide {
   margin-top: 28px;
 }
@@ -209,51 +225,119 @@ input:focus-visible {
 }
 
 .hero {
-  align-items: center;
+  align-items: stretch;
+  background:
+    linear-gradient(135deg, rgba(11, 31, 23, 0.96), rgba(0, 112, 67, 0.9)),
+    #0b1f17;
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
   display: grid;
   gap: 22px;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.7fr);
   margin-top: 22px;
-  padding: 30px;
+  overflow: hidden;
+  padding: 32px;
+  position: relative;
+}
+
+.hero::before {
+  background: linear-gradient(90deg, #008751 0 33%, #ffffff 33% 66%, #008751 66% 100%);
+  content: "";
+  height: 6px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.hero__copy {
+  align-self: center;
+  position: relative;
+  z-index: 1;
+}
+
+.hero .eyebrow {
+  color: #f5d15f;
 }
 
 .hero h2 {
-  font-size: clamp(2rem, 5vw, 4.4rem);
+  font-size: clamp(2.15rem, 5vw, 4.55rem);
   line-height: 0.98;
   max-width: 860px;
 }
 
 .hero p {
-  color: #516257;
+  color: #e1efe5;
   font-size: 1.02rem;
   line-height: 1.55;
   max-width: 780px;
 }
 
+.hero__visual {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 116px minmax(0, 1fr);
+  min-width: 0;
+}
+
 .hero-stat {
   align-items: center;
   aspect-ratio: 1;
-  background: #0b2719;
+  background: #ffffff;
   border-radius: 8px;
-  color: #ffffff;
+  color: #0b1f17;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 166px;
+  min-width: 116px;
   padding: 16px;
   text-align: center;
 }
 
 .hero-stat span {
-  font-size: 3.3rem;
+  font-size: 3rem;
   font-weight: 850;
   line-height: 1;
 }
 
 .hero-stat p {
-  color: #d6ecde;
+  color: #435246;
   font-size: 0.9rem;
   margin: 8px 0 0;
+}
+
+.hero-portraits {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-width: 0;
+}
+
+.hero-portrait {
+  aspect-ratio: 1;
+  background: #e7efe8;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-portrait img:first-child {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.hero-portrait img:last-child:not(:first-child) {
+  background: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  bottom: 7px;
+  height: 34px;
+  position: absolute;
+  right: 7px;
+  width: 34px;
 }
 
 .disclaimer {
@@ -283,7 +367,7 @@ input:focus-visible {
   gap: 18px;
   grid-template-columns: auto 1fr;
   margin: 18px 0;
-  padding: 22px;
+  padding: 24px;
 }
 
 .participant-panel__icon {
@@ -330,6 +414,7 @@ input:focus-visible {
 }
 
 .auth-primary {
+  background: #0b1f17;
   flex: 1 1 240px;
 }
 
@@ -357,9 +442,14 @@ input {
 }
 
 .form-error {
-  color: #b3261e;
+  background: #fff0ef;
+  border: 1px solid #ffc7c2;
+  border-radius: 8px;
+  color: #8c1d18;
   font-weight: 700;
+  line-height: 1.45;
   margin: 8px 0 0;
+  padding: 10px 12px;
 }
 
 .auth-hint {
@@ -408,7 +498,10 @@ input {
 }
 
 .voter-status {
-  padding: 18px 20px;
+  background:
+    linear-gradient(90deg, rgba(0, 135, 81, 0.08), transparent 58%),
+    #ffffff;
+  padding: 20px;
 }
 
 .voter-status > div:first-child {
@@ -424,6 +517,13 @@ input {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.button-secondary--icon {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
 }
 
 .status-pill,
@@ -466,7 +566,7 @@ input {
 
 .candidate-grid {
   display: grid;
-  gap: 16px;
+  gap: 18px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -474,18 +574,31 @@ input {
   background: #ffffff;
   border: 1px solid rgba(24, 33, 27, 0.1);
   border-radius: 8px;
+  box-shadow: 0 14px 30px rgba(18, 35, 24, 0.08);
   display: flex;
   flex-direction: column;
   min-height: 100%;
   overflow: hidden;
   padding: 18px;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.candidate-card:hover {
+  border-color: rgba(0, 135, 81, 0.28);
+  box-shadow: 0 22px 44px rgba(18, 35, 24, 0.13);
+  transform: translateY(-2px);
 }
 
 .candidate-portrait-wrap {
-  aspect-ratio: 16 / 11;
-  background: #eef5ef;
+  aspect-ratio: 4 / 3;
+  background:
+    linear-gradient(135deg, rgba(0, 135, 81, 0.12), rgba(255, 193, 7, 0.16)),
+    #eef5ef;
   border-radius: 8px;
-  margin-bottom: 16px;
+  margin: -2px -2px 16px;
   overflow: hidden;
   position: relative;
 }
@@ -500,7 +613,7 @@ input {
 .candidate-party-badge {
   background: #ffffff;
   border: 3px solid #ffffff;
-  border-radius: 12px;
+  border-radius: 8px;
   bottom: 10px;
   box-shadow: 0 8px 20px rgba(18, 35, 24, 0.16);
   height: 52px;
@@ -516,7 +629,9 @@ input {
 }
 
 .candidate-card h3 {
-  margin: 8px 0 3px;
+  font-size: 1.28rem;
+  line-height: 1.12;
+  margin: 8px 0 4px;
 }
 
 .candidate-card p {
@@ -526,7 +641,35 @@ input {
 .candidate-card__body {
   flex: 1;
   line-height: 1.5;
-  margin: 16px 0;
+  margin: 14px 0;
+}
+
+.ticket-pair {
+  background:
+    linear-gradient(90deg, rgba(0, 135, 81, 0.1), rgba(255, 193, 7, 0.1)),
+    #f8faf7;
+  border: 1px solid #dce8dd;
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  margin: 0 0 14px;
+  padding: 12px;
+}
+
+.ticket-pair span {
+  color: #6a5a12;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.ticket-pair strong {
+  color: #15241b;
+}
+
+.ticket-pair small {
+  color: #006c43;
+  font-weight: 800;
 }
 
 .candidate-card__meta {
@@ -544,6 +687,10 @@ input {
   justify-content: center;
   margin-top: 16px;
   width: 100%;
+}
+
+.candidate-card__button:not(:disabled) {
+  background: #0b1f17;
 }
 
 /* ========================================================
@@ -946,6 +1093,10 @@ input {
     min-width: 0;
   }
 
+  .hero__visual {
+    grid-template-columns: 120px minmax(0, 1fr);
+  }
+
   .candidate-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -958,6 +1109,65 @@ input {
   .page-shell {
     padding-left: 14px;
     padding-right: 14px;
+  }
+
+  .site-header__inner {
+    padding: 12px 14px;
+  }
+
+  .brand-logo {
+    height: 46px;
+    width: 46px;
+  }
+
+  .site-header h1 {
+    font-size: 1.08rem;
+    line-height: 1.1;
+  }
+
+  .tab {
+    gap: 5px;
+    min-height: 42px;
+    padding: 0 6px;
+  }
+
+  .tab span {
+    font-size: 0.84rem;
+  }
+
+  .hero {
+    padding: 26px 18px 18px;
+  }
+
+  .hero h2 {
+    font-size: 2.25rem;
+  }
+
+  .hero__visual {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-stat {
+    align-items: center;
+    aspect-ratio: auto;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-start;
+    min-height: 72px;
+    text-align: left;
+  }
+
+  .hero-stat p {
+    margin: 0;
+  }
+
+  .hero-portraits {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .hero-portrait img:last-child:not(:first-child) {
+    height: 26px;
+    width: 26px;
   }
 
   .candidate-grid {
@@ -984,6 +1194,10 @@ input {
 
   .voter-status__actions {
     align-items: stretch;
+  }
+
+  .button-secondary--icon {
+    width: 100%;
   }
 
   .poll-option {

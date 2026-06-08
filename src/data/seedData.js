@@ -4,7 +4,7 @@
  Description:           Local seed data for demo-mode candidates and public polls.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added real candidate image paths and INEC party logo paths for browser-only demo mode.
+ Modification Notes:    Added real candidate image paths, party logo paths, and full simulation running-mate ticket data for browser-only demo mode.
 *********************************************************/
 
 // ========================================================
@@ -17,7 +17,7 @@ export const simulationCandidates = [
     party_name: 'All Progressives Congress',
     party_code: 'APC',
     running_mate: 'Kashim Shettima',
-    background_text: 'Simulation entry based on your planning list. Current president and former Lagos State governor.',
+    background_text: 'Simulation entry using the Tinubu-Shettima pairing until a final 2027 running-mate decision is confirmed.',
     color: '#008751',
     logo_url: '/assets/party-badges/apc.jpg',
     photo_url: '/assets/candidates/apc-tinubu.png'
@@ -27,8 +27,8 @@ export const simulationCandidates = [
     name: 'Atiku Abubakar',
     party_name: 'African Democratic Congress',
     party_code: 'ADC',
-    running_mate: 'TBA',
-    background_text: 'Simulation entry based on your planning list. Former vice president and long-running presidential contender.',
+    running_mate: 'Ifeanyi Okowa',
+    background_text: 'Simulation entry using a prior known Atiku running-mate pairing until a final 2027 ticket is confirmed.',
     color: '#1357a6',
     logo_url: '/assets/party-badges/adc.jpg',
     photo_url: '/assets/candidates/adc-atiku.png'
@@ -38,8 +38,8 @@ export const simulationCandidates = [
     name: 'Peter Obi',
     party_name: 'Nigeria Democratic Congress',
     party_code: 'NDC',
-    running_mate: 'TBA',
-    background_text: 'Simulation entry based on your planning list. Former Anambra State governor and 2023 presidential candidate.',
+    running_mate: 'Rabiu Musa Kwankwaso',
+    background_text: 'Simulation entry reflecting the planned Obi-Kwankwaso ticket discussed for the 2027 preference poll.',
     color: '#d71920',
     logo_url: '/assets/party-badges/ndc.jpeg',
     photo_url: '/assets/candidates/ndc-obi.png'
@@ -49,8 +49,8 @@ export const simulationCandidates = [
     name: 'Donald Duke',
     party_name: 'Peoples Redemption Party',
     party_code: 'PRP',
-    running_mate: 'TBA',
-    background_text: 'Simulation entry based on your planning list. Former Cross River State governor.',
+    running_mate: 'Shehu Musa Gabam',
+    background_text: 'Simulation entry using a prior Donald Duke ticket association until a final 2027 running mate is confirmed.',
     color: '#b3261e',
     logo_url: '/assets/party-badges/prp.png',
     photo_url: '/assets/candidates/prp-duke.png'
@@ -60,8 +60,8 @@ export const simulationCandidates = [
     name: 'Prince Adewole Adebayo',
     party_name: 'Social Democratic Party',
     party_code: 'SDP',
-    running_mate: 'TBA',
-    background_text: 'Simulation entry based on your planning list. Social Democratic Party presidential figure.',
+    running_mate: 'Yusuf Buhari',
+    background_text: 'Simulation entry using the SDP ticket pairing known from the last presidential cycle.',
     color: '#0062a3',
     logo_url: '/assets/party-badges/sdp.png',
     photo_url: '/assets/candidates/sdp-adebayo.png'
@@ -71,8 +71,8 @@ export const simulationCandidates = [
     name: 'Omoyele Sowore',
     party_name: 'African Action Congress',
     party_code: 'AAC',
-    running_mate: 'TBA',
-    background_text: 'Simulation entry based on your planning list. Activist, publisher, and African Action Congress figure.',
+    running_mate: 'Haruna Garba Magashi',
+    background_text: 'Simulation entry using the AAC ticket pairing known from the last presidential cycle.',
     color: '#f59f00',
     logo_url: '/assets/party-badges/aac.jpg',
     photo_url: '/assets/candidates/aac-sowore.jpg'
@@ -82,8 +82,8 @@ export const simulationCandidates = [
     name: 'Sandy Onor',
     party_name: 'Peoples Democratic Party',
     party_code: 'PDP',
-    running_mate: 'TBA',
-    background_text: 'Simulation entry based on your planning list. Former senator and Cross River political figure.',
+    running_mate: 'Emana Duke Ambrose-Amawhe',
+    background_text: "Simulation entry using Sandy Onor's prior Cross River ticket pairing for the preference poll.",
     color: '#0b8f3a',
     logo_url: '/assets/party-badges/pdp.jpg',
     photo_url: '/assets/candidates/pdp-onor.png'
