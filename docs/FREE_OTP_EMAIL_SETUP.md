@@ -5,7 +5,7 @@
  Description:           Free email OTP setup guide for Supabase Auth.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added Brevo SMTP setup, Supabase email provider setup, phone OTP limitations, and environment toggle notes.
+ Modification Notes:    Added Brevo SMTP setup, Supabase email provider setup, redirect setup, troubleshooting, phone OTP limitations, and environment toggle notes.
 *********************************************************/
 -->
 
@@ -87,6 +87,42 @@ Do not put the SMTP password inside the React app or Vercel frontend environment
 6. Save.
 
 The app already calls Supabase Auth for email OTP. Once Supabase email auth and SMTP are configured, the final vote confirmation step can send email codes.
+
+<!-- ========================================================
+     Redirect setup
+     ======================================================== -->
+
+## Set The Supabase Redirect URL
+
+1. In Supabase, open `Authentication`.
+2. Open `URL Configuration`.
+3. Set `Site URL` to:
+
+```text
+https://nigeria-2027-voting-app.vercel.app
+```
+
+4. Add this redirect URL:
+
+```text
+https://nigeria-2027-voting-app.vercel.app/**
+```
+
+5. Save.
+
+<!-- ========================================================
+     Troubleshooting
+     ======================================================== -->
+
+## Troubleshooting
+
+If the app says `Email provider is disabled`, email authentication is still disabled in Supabase Auth providers.
+
+If the email link opens `localhost`, Supabase `Site URL` or `Redirect URLs` still point to local development.
+
+If no email arrives, check Supabase Auth logs and confirm custom SMTP is saved correctly.
+
+If the email contains only a sign-in link and no numeric code, update the Supabase email template to include the token variable or use the sign-in link after the deployed redirect URL is configured.
 
 <!-- ========================================================
      Phone OTP disabled by default

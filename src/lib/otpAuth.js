@@ -4,7 +4,7 @@
  Description:           Supabase OTP helper functions for vote verification fallback.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added email and phone OTP request, verification, normalization, and availability helpers.
+ Modification Notes:    Added email and phone OTP request with deployed redirect, verification, normalization, and availability helpers.
 *********************************************************/
 
 // ========================================================
@@ -57,7 +57,12 @@ export async function requestOtpCode({ contactType, contact }) {
   const payload =
     contactType === 'phone'
       ? { phone: normalizedContact }
-      : { email: normalizedContact };
+      : {
+          email: normalizedContact,
+          options: {
+            emailRedirectTo: `${window.location.origin}/#vote`
+          }
+        };
 
   const { error } = await supabase.auth.signInWithOtp(payload);
   if (error) throw error;

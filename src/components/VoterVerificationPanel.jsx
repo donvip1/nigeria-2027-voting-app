@@ -4,7 +4,7 @@
  Description:           Passkey and OTP verification panel for participant setup and vote confirmation.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added required passkey verification with email and phone OTP fallback controls.
+ Modification Notes:    Added required passkey verification with email OTP fallback controls and specific Supabase error display.
 *********************************************************/
 
 // ========================================================
@@ -132,15 +132,15 @@ export default function VoterVerificationPanel({
 
         {!phoneOtpEnabled && (
           <div className="otp-toggle otp-toggle--single" aria-label="OTP contact type">
-          <button
-            type="button"
-            className="otp-toggle__button otp-toggle__button--active"
-            onClick={() => setContactType('email')}
-            disabled={disabled}
-          >
-            <Mail aria-hidden="true" size={16} />
-            <span>Email</span>
-          </button>
+            <button
+              type="button"
+              className="otp-toggle__button otp-toggle__button--active"
+              onClick={() => setContactType('email')}
+              disabled={disabled}
+            >
+              <Mail aria-hidden="true" size={16} />
+              <span>Email</span>
+            </button>
           </div>
         )}
 
@@ -191,10 +191,6 @@ function readableOtpError(error) {
 
   if (message.toLowerCase().includes('phone')) {
     return 'Phone OTP requires Supabase phone authentication and an SMS provider to be enabled.';
-  }
-
-  if (message.toLowerCase().includes('email')) {
-    return 'Email OTP requires Supabase email authentication to be enabled.';
   }
 
   return message;
