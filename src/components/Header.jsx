@@ -4,7 +4,7 @@
  Description:           Header navigation for the Nigeria 2027 virtual voting app.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added Nigeria-themed brand logo and tab navigation for vote, results, polls, and info pages.
+ Modification Notes:    Added Nigeria-themed brand logo and anchor-based tab navigation for vote, results, polls, and info pages.
 *********************************************************/
 
 // ========================================================
@@ -40,15 +40,15 @@ export default function Header({ currentPage, onNavigate }) {
 
         <nav className="tabs" aria-label="Main navigation">
           {tabs.map(({ id, label, icon: Icon }) => (
-            <button
+            <a
               key={id}
-              type="button"
+              href={`#${id}`}
               className={currentPage === id ? 'tab tab--active' : 'tab'}
               onClick={() => onNavigate(id)}
             >
               <Icon aria-hidden="true" size={17} />
               <span>{label}</span>
-            </button>
+            </a>
           ))}
         </nav>
       </div>

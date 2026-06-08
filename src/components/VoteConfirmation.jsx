@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Final confirmation modal before submitting a virtual presidential vote.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added candidate summary, modal controls, and submit error display.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added required final verification support, candidate summary, modal controls, and submit error display.
 *********************************************************/
 
 // ========================================================
@@ -15,7 +15,15 @@ import { X } from 'lucide-react';
 // ========================================================
 // Vote confirmation modal component
 // ========================================================
-export default function VoteConfirmation({ candidate, isSubmitting, error, onCancel, onConfirm }) {
+export default function VoteConfirmation({
+  candidate,
+  isSubmitting,
+  error,
+  verificationComplete,
+  verificationPanel,
+  onCancel,
+  onConfirm
+}) {
   if (!candidate) return null;
 
   return (
@@ -38,14 +46,16 @@ export default function VoteConfirmation({ candidate, isSubmitting, error, onCan
           <p>{candidate.running_mate ? `Running mate: ${candidate.running_mate}` : 'Running mate: TBA'}</p>
         </div>
 
+        {verificationPanel}
+
         {error && <p className="form-error">{error}</p>}
 
         <div className="modal__actions">
           <button type="button" className="button-secondary" onClick={onCancel} disabled={isSubmitting}>
             Review again
           </button>
-          <button type="button" onClick={onConfirm} disabled={isSubmitting}>
-            {isSubmitting ? 'Submitting...' : 'Submit virtual vote'}
+          <button type="button" onClick={onConfirm} disabled={isSubmitting || !verificationComplete}>
+            {isSubmitting ? 'Submitting...' : 'Submit verified vote'}
           </button>
         </div>
       </section>

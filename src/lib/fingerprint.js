@@ -4,8 +4,13 @@
  Description:           Participant identity, duplicate-vote markers, and lightweight fingerprint helpers.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Improved passkey availability, passkey registration, vote-state preservation, local participant storage, poll vote tracking, IP lookup, and browser fingerprinting.
+ Modification Notes:    Improved passkey availability, passkey registration, OTP-aware participant storage, vote-state preservation, poll vote tracking, IP lookup, and browser fingerprinting.
 *********************************************************/
+
+// ========================================================
+// Imports
+// ========================================================
+import { getStoredOtpVerification } from './otpAuth';
 
 // ========================================================
 // Stored participant lookup
@@ -16,6 +21,7 @@ export function getStoredParticipant() {
   const hasVoted = localStorage.getItem('n27_presidential_vote') === 'true';
   const passkeyCredentialId = localStorage.getItem('n27_passkey_credential_id');
   const passkeyVerifiedAt = localStorage.getItem('n27_passkey_verified_at');
+  const otpVerification = getStoredOtpVerification();
 
   if (!nickname || !fingerprint) return null;
   return {
@@ -24,7 +30,8 @@ export function getStoredParticipant() {
     hasVoted,
     hasPasskey: Boolean(passkeyCredentialId),
     passkeyCredentialId,
-    passkeyVerifiedAt
+    passkeyVerifiedAt,
+    otpVerification
   };
 }
 
@@ -53,7 +60,8 @@ export function saveParticipant(nickname, passkeyData = null) {
     hasVoted: localStorage.getItem('n27_presidential_vote') === 'true',
     hasPasskey: Boolean(passkeyData?.credentialId || localStorage.getItem('n27_passkey_credential_id')),
     passkeyCredentialId: passkeyData?.credentialId || localStorage.getItem('n27_passkey_credential_id'),
-    passkeyVerifiedAt: passkeyData?.verifiedAt || localStorage.getItem('n27_passkey_verified_at')
+    passkeyVerifiedAt: passkeyData?.verifiedAt || localStorage.getItem('n27_passkey_verified_at'),
+    otpVerification: getStoredOtpVerification()
   };
 }
 

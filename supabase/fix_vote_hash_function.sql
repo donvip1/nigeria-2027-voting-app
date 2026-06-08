@@ -4,7 +4,7 @@
  Description:           Supabase patch for fixing presidential vote hash generation.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Replaced pgcrypto digest hashing with built-in md5 hashing to prevent missing digest function errors.
+ Modification Notes:    Replaced pgcrypto digest hashing with built-in md5 hashing and refreshed anon/authenticated vote permissions.
 *********************************************************/
 
 -- ========================================================
@@ -76,3 +76,4 @@ $$;
 -- ========================================================
 
 grant execute on function public.submit_presidential_vote(uuid, text, text, text) to anon;
+grant execute on function public.submit_presidential_vote(uuid, text, text, text) to authenticated;

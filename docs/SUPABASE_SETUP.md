@@ -5,7 +5,7 @@
  Description:           Supabase setup instructions for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added project creation, SQL setup, vote hash patch instructions, test vote reset instructions, environment variables, tables, and public API notes.
+ Modification Notes:    Added project creation, SQL setup, CMS setup, vote hash patch instructions, test vote reset instructions, OTP auth notes, environment variables, tables, and public API notes.
 *********************************************************/
 -->
 
@@ -31,6 +31,60 @@ In the Supabase SQL editor:
 
 1. Run `supabase/schema.sql`.
 2. Run `supabase/seed.sql`.
+
+<!-- ========================================================
+     Run CMS admin setup
+     ======================================================== -->
+
+## Set Up CMS Admin
+
+To enable the admin CMS page, run:
+
+```text
+supabase/cms_admin_setup.sql
+```
+
+The first allowed CMS admin email is:
+
+```text
+veezee4us@gmail.com
+```
+
+You can add another admin later by inserting another row into `public.cms_admins`.
+
+<!-- ========================================================
+     Enable OTP authentication
+     ======================================================== -->
+
+## Enable OTP Verification
+
+The app can request OTP codes through Supabase Auth.
+
+For email OTP:
+
+1. Open Supabase.
+2. Go to `Authentication`.
+3. Open `Providers`.
+4. Enable email authentication.
+5. Make sure email OTP/magic link settings are enabled.
+
+For phone OTP:
+
+1. Open Supabase.
+2. Go to `Authentication`.
+3. Open `Providers`.
+4. Enable phone authentication.
+5. Configure an SMS provider such as Twilio or another Supabase-supported SMS provider.
+
+If phone auth is not configured, phone OTP will not send. Email OTP can still be used if email auth is enabled.
+
+If your database was created before OTP voting was added, also run:
+
+```text
+supabase/grant_authenticated_vote_rpc.sql
+```
+
+This lets OTP-authenticated users call the same controlled vote submission functions as anonymous visitors.
 
 <!-- ========================================================
      Fix deployed vote hash function error
@@ -128,6 +182,7 @@ Restart the dev server after editing `.env`.
 - `polls`: active yes/no or multiple-choice polls.
 - `poll_options`: options for each poll.
 - `poll_votes`: append-only poll votes.
+- `cms_admins`: allow-list of emails that can edit CMS candidate content.
 
 <!-- ========================================================
      Public frontend read and write interface

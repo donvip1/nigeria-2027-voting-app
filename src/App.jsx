@@ -4,7 +4,7 @@
  Description:           Main app shell, page navigation, candidate loading, and global layout.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added privacy and contact pages, footer navigation, and public compliance links.
+ Modification Notes:    Added privacy, contact, CMS page routing, footer navigation, and public compliance links.
 *********************************************************/
 
 // ========================================================
@@ -19,15 +19,18 @@ import PollsPage from './pages/PollsPage';
 import InfoPage from './pages/InfoPage';
 import PrivacyPage from './pages/PrivacyPage';
 import ContactPage from './pages/ContactPage';
+import CmsPage from './pages/CmsPage';
 import { fetchCandidates } from './lib/api';
 import { getStoredParticipant } from './lib/fingerprint';
 import { isSupabaseConfigured } from './lib/supabase';
+
+const routablePages = ['vote', 'results', 'polls', 'info', 'privacy', 'contact', 'cms'];
 
 // ========================================================
 // Main application component and shared state
 // ========================================================
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('vote');
+  const [currentPage, setCurrentPage] = useState(getHashPage());
   const [candidates, setCandidates] = useState([]);
   const [participant, setParticipant] = useState(null);
   const [loadingCandidates, setLoadingCandidates] = useState(true);
@@ -36,7 +39,27 @@ export default function App() {
   useEffect(() => {
     setParticipant(getStoredParticipant());
     refreshCandidates();
+
+    function handleHashChange() {
+      setCurrentPage(getHashPage());
+    }
+
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
   }, []);
+
+  // ========================================================
+  // App navigation helper
+  // ========================================================
+  function handleNavigate(page) {
+    setCurrentPage(page);
+    if (window.location.hash !== `#${page}`) {
+      window.location.hash = page;
+    }
+  }
 
   // ========================================================
   // Candidate loading from Supabase or local demo storage
@@ -58,7 +81,7 @@ export default function App() {
   // ========================================================
   return (
     <div className="app">
-      <Header currentPage={currentPage} onNavigate={setCurrentPage} />
+      <Header currentPage={currentPage} onNavigate={handleNavigate} />
 
       {!isSupabaseConfigured && (
         <div className="demo-ribbon">
@@ -86,21 +109,26 @@ export default function App() {
         <PollsPage participant={participant} setParticipant={setParticipant} />
       )}
 
-      {currentPage === 'info' && <InfoPage onNavigate={setCurrentPage} />}
+      {currentPage === 'info' && <InfoPage onNavigate={handleNavigate} />}
 
       {currentPage === 'privacy' && <PrivacyPage />}
 
       {currentPage === 'contact' && <ContactPage />}
 
+      {currentPage === 'cms' && <CmsPage />}
+
       <footer className="site-footer">
         <Disclaimer compact />
         <nav className="footer-links" aria-label="Footer navigation">
-          <button type="button" className="text-link" onClick={() => setCurrentPage('privacy')}>
+          <a href="#privacy" className="text-link" onClick={() => handleNavigate('privacy')}>
             Privacy Policy
-          </button>
-          <button type="button" className="text-link" onClick={() => setCurrentPage('contact')}>
+          </a>
+          <a href="#contact" className="text-link" onClick={() => handleNavigate('contact')}>
             Contact
-          </button>
+          </a>
+          <a href="#cms" className="text-link" onClick={() => handleNavigate('cms')}>
+            CMS
+          </a>
         </nav>
         <p>
           Nigeria 2027 Virtual Vote is built as a public simulation and educational product. Verify
@@ -109,4 +137,12 @@ export default function App() {
       </footer>
     </div>
   );
+}
+
+// ========================================================
+// Hash route resolver
+// ========================================================
+function getHashPage() {
+  const hashPage = window.location.hash.replace('#', '');
+  return routablePages.includes(hashPage) ? hashPage : 'vote';
 }

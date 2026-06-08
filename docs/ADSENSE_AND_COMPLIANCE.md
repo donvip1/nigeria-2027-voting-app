@@ -5,7 +5,7 @@
  Description:           Advertising and compliance notes for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added AdSense-safe placement rules, readiness checklist, ads.txt setup, revenue caveats, publisher client ID, slot variables, and implementation notes.
+ Modification Notes:    Added AdSense-safe placement rules, Auto Ads/vignette guidance, readiness checklist, ads.txt setup, revenue caveats, publisher client ID, slot variables, and implementation notes.
 *********************************************************/
 -->
 
@@ -25,6 +25,16 @@ The app uses normal ad placements only:
 - optional AdSense Auto Ads after approval.
 
 Do not add forced countdowns, popups that block voting for ad views, fake close buttons, click prompts, or messages asking users to support the site by clicking ads.
+
+<!-- ========================================================
+     Page-transition ads
+     ======================================================== -->
+
+## Page-Transition Ads
+
+Do not build custom pop-up AdSense modals in React. For page-change ads, use Google AdSense Auto Ads and enable vignette ads inside the AdSense dashboard.
+
+The app navigation uses normal anchor links such as `#results`, which is friendlier to Auto Ads than pure button-only navigation. Google still controls whether vignette ads appear, how often they appear, and for which visitors.
 
 <!-- ========================================================
      Site readiness before AdSense application
@@ -81,3 +91,12 @@ VITE_ADSENSE_BANNER_SLOT=
 VITE_ADSENSE_WIDE_SLOT=
 VITE_ADSENSE_RECTANGLE_SLOT=
 ```
+
+To make ads start showing:
+
+1. Confirm the site is approved inside Google AdSense.
+2. Confirm `https://nigeria-2027-voting-app.vercel.app/ads.txt` is accessible.
+3. Turn on Auto Ads in AdSense if you want Google-managed placements.
+4. Turn on vignette ads in Auto Ads if you want page-transition ads.
+5. Create display ad units if you want manual in-page slots.
+6. Add the slot IDs to Vercel environment variables and redeploy.

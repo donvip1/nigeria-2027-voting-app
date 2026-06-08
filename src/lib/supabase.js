@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Supabase browser client setup for the virtual voting app.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added environment-variable configuration and demo-mode detection.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added environment-variable configuration, OTP/CMS auth persistence, and demo-mode detection.
 *********************************************************/
 
 // ========================================================
@@ -23,7 +23,8 @@ export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 export const supabase = isSupabaseConfigured
   ? createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
-        persistSession: false
+        persistSession: true,
+        autoRefreshToken: true
       }
     })
   : null;

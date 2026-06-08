@@ -4,7 +4,7 @@
  Description:           Supabase database schema for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added participants, candidates, votes, polls, RLS policies, read views, secure RPC vote submission functions, and extension-free vote hashing.
+ Modification Notes:    Added participants, candidates, votes, polls, CMS admins, RLS policies, CMS read/update policies, read views, authenticated vote RPC permissions, and extension-free vote hashing.
 *********************************************************/
 
 -- ========================================================
@@ -37,6 +37,12 @@ create table if not exists public.candidates (
   logo_url text,
   photo_url text,
   is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.cms_admins (
+  id uuid primary key default gen_random_uuid(),
+  email text not null unique,
   created_at timestamptz not null default now()
 );
 
@@ -117,6 +123,7 @@ group by c.id;
 
 alter table public.participants enable row level security;
 alter table public.candidates enable row level security;
+alter table public.cms_admins enable row level security;
 alter table public.presidential_votes enable row level security;
 alter table public.polls enable row level security;
 alter table public.poll_options enable row level security;
@@ -147,11 +154,51 @@ using (
   )
 );
 
+drop policy if exists "CMS admins can read own allow-list row" on public.cms_admins;
+create policy "CMS admins can read own allow-list row"
+on public.cms_admins for select
+to authenticated
+using (lower(email) = lower(auth.jwt() ->> 'email'));
+
+drop policy if exists "CMS admins can read all candidates" on public.candidates;
+create policy "CMS admins can read all candidates"
+on public.candidates for select
+to authenticated
+using (
+  exists (
+    select 1
+    from public.cms_admins
+    where lower(cms_admins.email) = lower(auth.jwt() ->> 'email')
+  )
+);
+
+drop policy if exists "CMS admins can update candidates" on public.candidates;
+create policy "CMS admins can update candidates"
+on public.candidates for update
+to authenticated
+using (
+  exists (
+    select 1
+    from public.cms_admins
+    where lower(cms_admins.email) = lower(auth.jwt() ->> 'email')
+  )
+)
+with check (
+  exists (
+    select 1
+    from public.cms_admins
+    where lower(cms_admins.email) = lower(auth.jwt() ->> 'email')
+  )
+);
+
 grant usage on schema public to anon;
 grant select on public.candidate_results to anon;
 grant select on public.candidates to anon;
 grant select on public.polls to anon;
 grant select on public.poll_options to anon;
+grant select on public.cms_admins to authenticated;
+grant select on public.candidates to authenticated;
+grant update on public.candidates to authenticated;
 
 -- ========================================================
 -- Secure presidential vote submission RPC
@@ -295,3 +342,5 @@ $$;
 
 grant execute on function public.submit_presidential_vote(uuid, text, text, text) to anon;
 grant execute on function public.submit_poll_vote(uuid, uuid, text, text, text) to anon;
+grant execute on function public.submit_presidential_vote(uuid, text, text, text) to authenticated;
+grant execute on function public.submit_poll_vote(uuid, uuid, text, text, text) to authenticated;

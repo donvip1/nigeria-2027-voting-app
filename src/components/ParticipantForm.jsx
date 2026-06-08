@@ -4,7 +4,7 @@
  Description:           Participant nickname form and local participant setup.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added nickname validation, passkey/fingerprint registration, and browser fingerprint fallback flow.
+ Modification Notes:    Added nickname validation, passkey/fingerprint registration, and required verification messaging.
 *********************************************************/
 
 // ========================================================
@@ -63,7 +63,7 @@ export default function ParticipantForm({ onParticipantReady }) {
   }
 
   // ========================================================
-  // Nickname-only participant save handler
+  // Nickname participant save handler
   // ========================================================
   function handleSubmit(event) {
     event.preventDefault();
@@ -72,7 +72,7 @@ export default function ParticipantForm({ onParticipantReady }) {
     if (!cleaned) return;
 
     setError('');
-    setStatusMessage('Nickname saved. You can participate on this device.');
+    setStatusMessage('Nickname saved. Final voting still requires fingerprint/passkey or OTP verification.');
     onParticipantReady(saveParticipant(cleaned));
   }
 
@@ -110,10 +110,10 @@ export default function ParticipantForm({ onParticipantReady }) {
       </div>
       <div>
         <p className="eyebrow">Start here</p>
-        <h2 id="participant-title">Sign in with fingerprint or nickname</h2>
+        <h2 id="participant-title">Set up your voting profile</h2>
         <p className="muted">
           Use a device passkey such as fingerprint, Face ID, Touch ID, or Windows Hello when
-          available. Nickname-only fallback is still allowed for this public simulation.
+          available. If your device cannot use passkeys, the final vote step can use email or phone OTP.
         </p>
       </div>
 
@@ -139,7 +139,7 @@ export default function ParticipantForm({ onParticipantReady }) {
             <span>{isRegisteringPasskey ? 'Waiting for device...' : 'Use fingerprint/passkey'}</span>
           </button>
           <button type="submit" className="button-secondary">
-            Continue with nickname
+            Save nickname
           </button>
         </div>
         <p className={passkeyAvailable ? 'auth-hint auth-hint--ok' : 'auth-hint'}>{passkeyReason}</p>

@@ -16,6 +16,7 @@ import AdSlot from '../components/AdSlot';
 import CandidateCard from '../components/CandidateCard';
 import Disclaimer from '../components/Disclaimer';
 import ParticipantForm from '../components/ParticipantForm';
+import VoterVerificationPanel from '../components/VoterVerificationPanel';
 import VoteConfirmation from '../components/VoteConfirmation';
 import { submitPresidentialVote } from '../lib/api';
 import { getCandidatePortrait, getPartyBadge } from '../lib/candidateAssets';
@@ -29,8 +30,10 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [verificationMessage, setVerificationMessage] = useState('');
+  const [finalVerification, setFinalVerification] = useState(null);
   const [isSettingUpPasskey, setIsSettingUpPasskey] = useState(false);
   const [isVerifyingPasskey, setIsVerifyingPasskey] = useState(false);
+  const [isFinalPasskeyBusy, setIsFinalPasskeyBusy] = useState(false);
 
   // ========================================================
   // Existing participant passkey setup handler
@@ -77,10 +80,64 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
   }
 
   // ========================================================
+  // Final vote verification handlers
+  // ========================================================
+  async function handleFinalPasskeyVerify() {
+    if (!participant?.hasPasskey) {
+      setError('Set up fingerprint/passkey first or use OTP verification.');
+      return;
+    }
+
+    setIsFinalPasskeyBusy(true);
+    setError('');
+
+    try {
+      const verification = await verifyStoredPasskey();
+      setFinalVerification({
+        method: 'passkey',
+        verifiedAt: verification.verifiedAt
+      });
+      setParticipant({
+        ...participant,
+        passkeyVerifiedAt: verification.verifiedAt
+      });
+    } catch (passkeyError) {
+      setError(readablePasskeyError(passkeyError));
+    } finally {
+      setIsFinalPasskeyBusy(false);
+    }
+  }
+
+  function handleFinalOtpVerified(verification) {
+    setFinalVerification({
+      method: 'otp',
+      contactType: verification.contactType,
+      contact: verification.contact,
+      verifiedAt: verification.verifiedAt
+    });
+    setParticipant({
+      ...participant,
+      otpVerification: verification
+    });
+    setError('');
+  }
+
+  function handleCandidateSelect(candidate) {
+    setSelectedCandidate(candidate);
+    setFinalVerification(null);
+    setError('');
+  }
+
+  // ========================================================
   // Confirm and submit selected presidential candidate
   // ========================================================
   async function handleConfirmVote() {
     if (!selectedCandidate || !participant) return;
+
+    if (!finalVerification) {
+      setError('Complete fingerprint/passkey or OTP verification before submitting your vote.');
+      return;
+    }
 
     setIsSubmitting(true);
     setError('');
@@ -148,7 +205,9 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
                 ? `Fingerprint/passkey enabled${
                     participant.passkeyVerifiedAt ? ` - last verified ${formatVerifiedAt(participant.passkeyVerifiedAt)}` : ''
                   }.`
-                : 'Nickname-only mode. Fingerprint/passkey was not saved for this participant.'}
+                : participant.otpVerification
+                  ? `OTP verified by ${participant.otpVerification.contactType}: ${participant.otpVerification.contact}.`
+                  : 'Verification required before vote submission. Use fingerprint/passkey or OTP at the final step.'}
             </p>
             {verificationMessage && <p className="auth-hint auth-hint--inline">{verificationMessage}</p>}
           </div>
@@ -194,7 +253,7 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
               candidate={candidate}
               disabled={!participant || participant.hasVoted}
               disabledReason={!participant ? 'Sign in first' : 'Already voted'}
-              onSelect={setSelectedCandidate}
+              onSelect={handleCandidateSelect}
             />
           ))}
         </div>
@@ -206,8 +265,24 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
         candidate={selectedCandidate}
         isSubmitting={isSubmitting}
         error={error}
+        verificationComplete={Boolean(finalVerification)}
+        verificationPanel={
+          selectedCandidate ? (
+            <VoterVerificationPanel
+              title="Confirm vote submission"
+              description="Complete fingerprint/passkey confirmation or OTP verification before the vote can be submitted."
+              passkeyLabel="Confirm with fingerprint/passkey"
+              otpLabel="Send vote code"
+              isPasskeyBusy={isFinalPasskeyBusy}
+              onPasskeyVerify={handleFinalPasskeyVerify}
+              onOtpVerified={handleFinalOtpVerified}
+              disabled={isSubmitting}
+            />
+          ) : null
+        }
         onCancel={() => {
           setSelectedCandidate(null);
+          setFinalVerification(null);
           setError('');
         }}
         onConfirm={handleConfirmVote}
