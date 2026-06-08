@@ -4,7 +4,7 @@
  Description:           Supabase database schema for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added participants, candidates, votes, polls, CMS admins, RLS policies, CMS candidate and poll edit policies, read views, authenticated vote RPC permissions, and extension-free vote hashing.
+ Modification Notes:    Added participants, candidates, votes, polls, CMS admins, RLS policies, CMS candidate and poll edit policies, candidate asset storage, read views, authenticated vote RPC permissions, and extension-free vote hashing.
 *********************************************************/
 
 -- ========================================================
@@ -265,6 +265,48 @@ grant select on public.polls to authenticated;
 grant update on public.polls to authenticated;
 grant select on public.poll_options to authenticated;
 grant update on public.poll_options to authenticated;
+
+-- ========================================================
+-- Candidate asset storage bucket and policies
+-- ========================================================
+
+insert into storage.buckets (
+  id,
+  name,
+  public,
+  file_size_limit,
+  allowed_mime_types
+)
+values (
+  'candidate-assets',
+  'candidate-assets',
+  true,
+  2097152,
+  array['image/jpeg', 'image/png', 'image/webp']
+)
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "Public can read candidate assets" on storage.objects;
+create policy "Public can read candidate assets"
+on storage.objects for select
+to anon, authenticated
+using (bucket_id = 'candidate-assets');
+
+drop policy if exists "CMS admins can upload candidate assets" on storage.objects;
+create policy "CMS admins can upload candidate assets"
+on storage.objects for insert
+to authenticated
+with check (
+  bucket_id = 'candidate-assets'
+  and exists (
+    select 1
+    from public.cms_admins
+    where lower(cms_admins.email) = lower(auth.jwt() ->> 'email')
+  )
+);
 
 -- ========================================================
 -- Secure presidential vote submission RPC

@@ -5,7 +5,7 @@
  Description:           Beginner CMS guide for candidate and poll content editing.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added CMS setup, deployed redirect configuration, login, candidate editing, poll editing, and admin email management steps.
+ Modification Notes:    Added CMS setup, deployed redirect configuration, login, candidate editing, image upload, poll editing, and admin email management steps.
 *********************************************************/
 -->
 
@@ -15,7 +15,7 @@
      CMS purpose
      ======================================================== -->
 
-The CMS page lets an approved admin edit candidate and poll content without changing code. It is for candidate names, party names, party codes, running mates, descriptions, colors, image URLs, logo URLs, poll titles, poll types, poll options, and active/inactive status.
+The CMS page lets an approved admin edit candidate and poll content without changing code. It is for candidate names, party names, party codes, running mates, descriptions, uploaded images, image URLs, poll titles, poll types, poll options, and active/inactive status.
 
 <!-- ========================================================
      CMS setup
@@ -33,7 +33,7 @@ The CMS page lets an approved admin edit candidate and poll content without chan
 supabase/cms_admin_setup.sql
 ```
 
-If you already ran this file before poll editing was added, run it again. It is safe to rerun because the script uses `create table if not exists`, replaces policies, and keeps the admin email from duplicating.
+If you already ran this file before poll editing or image upload was added, run it again. It is safe to rerun because the script uses `create table if not exists`, replaces policies, creates the `candidate-assets` storage bucket if needed, and keeps the admin email from duplicating.
 
 The first admin email is:
 
@@ -91,8 +91,13 @@ If the email link opens `localhost` and shows `localhost refused to connect`, Su
 
 1. Click the `Candidates` tab.
 2. Change the candidate fields you want.
-3. Click `Save candidate` on that candidate card.
-4. Open the `Vote` or `Results` page to confirm the content changed.
+3. To upload a candidate photo or party logo, click `Upload image` beside that image field.
+4. Choose a JPG, PNG, or WebP image that is 2 MB or smaller.
+5. Wait for the upload message.
+6. Click `Save candidate` on that candidate card.
+7. Open the `Vote` or `Results` page to confirm the content changed.
+
+The image upload places the new public image URL into the field first. The candidate is not fully updated until you click `Save candidate`.
 
 <!-- ========================================================
      Poll editing

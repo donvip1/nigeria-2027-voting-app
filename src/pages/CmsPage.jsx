@@ -4,14 +4,14 @@
  Description:           Lightweight CMS page for authenticated candidate content editing.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added email OTP admin login, admin allow-list verification, candidate and poll editor forms, and save/logout controls.
+ Modification Notes:    Added email OTP admin login, admin allow-list verification, candidate and poll editor forms, candidate image uploads, and save/logout controls.
 *********************************************************/
 
 // ========================================================
 // Imports and CMS helpers
 // ========================================================
 import { useEffect, useState } from 'react';
-import { ListChecks, Lock, LogOut, Save } from 'lucide-react';
+import { ListChecks, Lock, LogOut, Save, Upload } from 'lucide-react';
 import AdSlot from '../components/AdSlot';
 import {
   fetchCmsCandidates,
@@ -22,6 +22,7 @@ import {
   updateCmsCandidate,
   updateCmsPoll,
   updateCmsPollOption,
+  uploadCmsCandidateAsset,
   verifyCmsAdmin,
   verifyCmsLoginCode
 } from '../lib/cmsApi';
@@ -47,6 +48,7 @@ export default function CmsPage() {
   const [savingId, setSavingId] = useState('');
   const [savingPollId, setSavingPollId] = useState('');
   const [savingOptionId, setSavingOptionId] = useState('');
+  const [uploadingAssetId, setUploadingAssetId] = useState('');
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
 
@@ -157,6 +159,28 @@ export default function CmsPage() {
       setError(saveError.message || 'Candidate save failed.');
     } finally {
       setSavingId('');
+    }
+  }
+
+  async function handleUploadCandidateAsset(candidate, field, file) {
+    const assetType = field === 'photo_url' ? 'photo' : 'logo';
+    const uploadId = `${candidate.id}-${field}`;
+    setUploadingAssetId(uploadId);
+    setMessage('');
+    setError('');
+
+    try {
+      const publicUrl = await uploadCmsCandidateAsset({
+        candidate,
+        assetType,
+        file
+      });
+      updateLocalCandidate(candidate.id, field, publicUrl);
+      setMessage(`${candidate.name} ${assetType} uploaded. Click Save candidate to publish it.`);
+    } catch (uploadError) {
+      setError(uploadError.message || 'Image upload failed.');
+    } finally {
+      setUploadingAssetId('');
     }
   }
 
@@ -343,8 +367,27 @@ export default function CmsPage() {
                     <CmsField itemId={candidate.id} label="Party code" value={candidate.party_code} onChange={(value) => updateLocalCandidate(candidate.id, 'party_code', value)} />
                     <CmsField itemId={candidate.id} label="Running mate" value={candidate.running_mate || ''} onChange={(value) => updateLocalCandidate(candidate.id, 'running_mate', value)} />
                     <CmsField itemId={candidate.id} label="Color" type="color" value={candidate.color || '#008751'} onChange={(value) => updateLocalCandidate(candidate.id, 'color', value)} />
-                    <CmsField itemId={candidate.id} label="Photo URL" value={candidate.photo_url || ''} onChange={(value) => updateLocalCandidate(candidate.id, 'photo_url', value)} />
-                    <CmsField itemId={candidate.id} label="Logo URL" value={candidate.logo_url || ''} onChange={(value) => updateLocalCandidate(candidate.id, 'logo_url', value)} />
+                  </div>
+
+                  <div className="cms-media-grid">
+                    <CmsImageField
+                      candidate={candidate}
+                      field="photo_url"
+                      label="Candidate photo"
+                      value={candidate.photo_url || ''}
+                      uploading={uploadingAssetId === `${candidate.id}-photo_url`}
+                      onUrlChange={(value) => updateLocalCandidate(candidate.id, 'photo_url', value)}
+                      onUpload={(file) => handleUploadCandidateAsset(candidate, 'photo_url', file)}
+                    />
+                    <CmsImageField
+                      candidate={candidate}
+                      field="logo_url"
+                      label="Party logo"
+                      value={candidate.logo_url || ''}
+                      uploading={uploadingAssetId === `${candidate.id}-logo_url`}
+                      onUrlChange={(value) => updateLocalCandidate(candidate.id, 'logo_url', value)}
+                      onUpload={(file) => handleUploadCandidateAsset(candidate, 'logo_url', file)}
+                    />
                   </div>
 
                   <label className="cms-textarea-label" htmlFor={`background-${candidate.id}`}>Background text</label>
@@ -463,6 +506,46 @@ function CmsField({ itemId, label, value, onChange, type = 'text' }) {
       <span>{label}</span>
       <input id={fieldId} type={type} value={value} onChange={(event) => onChange(event.target.value)} />
     </label>
+  );
+}
+
+function CmsImageField({ candidate, field, label, value, uploading, onUrlChange, onUpload }) {
+  const fieldId = `cms-${candidate.id}-${field}`;
+
+  return (
+    <div className="cms-image-field">
+      <div className="cms-image-preview">
+        {value ? (
+          <img src={value} alt={`${candidate.name} ${label.toLowerCase()}`} />
+        ) : (
+          <span>No image</span>
+        )}
+      </div>
+
+      <div className="cms-image-controls">
+        <CmsField itemId={candidate.id} label={`${label} URL`} value={value} onChange={onUrlChange} />
+        <input
+          id={fieldId}
+          className="cms-file-input"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={(event) => {
+            const [file] = event.target.files;
+            if (file) onUpload(file);
+            event.target.value = '';
+          }}
+        />
+        <button
+          type="button"
+          className="button-secondary button-secondary--icon"
+          disabled={uploading}
+          onClick={() => document.getElementById(fieldId)?.click()}
+        >
+          <Upload aria-hidden="true" size={17} />
+          <span>{uploading ? 'Uploading...' : 'Upload image'}</span>
+        </button>
+      </div>
+    </div>
   );
 }
 

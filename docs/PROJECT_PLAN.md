@@ -33,7 +33,7 @@ Build and launch a free-tier MVP for a Nigeria 2027 virtual voting simulation. T
 - Include non-intrusive ad areas that can later be connected to AdSense.
 - Include public information, privacy policy, contact page, and simulation disclaimers.
 - Require passkey or email OTP verification before presidential vote submission.
-- Provide a protected starter CMS for candidate and poll content updates.
+- Provide a protected starter CMS for candidate, image, and poll content updates.
 - Include SEO metadata, sitemap, and crawler guidance.
 - Work well on mobile and desktop.
 
@@ -47,7 +47,7 @@ Build and launch a free-tier MVP for a Nigeria 2027 virtual voting simulation. T
 - Database: Supabase Postgres.
 - Security model: public reads for active content, vote submission through `security definer` RPC functions, no direct frontend vote table writes.
 - Auth: local passkey/WebAuthn support plus Supabase email OTP fallback.
-- CMS: Supabase Auth email OTP, `cms_admins` allow-list, RLS-protected candidate and poll updates.
+- CMS: Supabase Auth email OTP, `cms_admins` allow-list, RLS-protected candidate and poll updates, plus Supabase Storage for uploaded candidate assets.
 - Deployment: Vercel frontend, Supabase backend.
 - Fallback: demo mode using local storage when Supabase env vars are missing.
 
@@ -65,7 +65,7 @@ Build and launch a free-tier MVP for a Nigeria 2027 virtual voting simulation. T
 6. Add Supabase schema, RPC functions, seed data, and reset scripts. Done.
 7. Add candidate photos, party logos, and candidate carousel. Done.
 8. Add public privacy/contact/info pages. Done.
-9. Add protected starter CMS for candidate and poll edits. Done.
+9. Add protected starter CMS for candidate, image, and poll edits. Done.
 10. Add SEO metadata, robots, sitemap, and Search Console guide. Done.
 11. Verify with local production build. Ongoing before each push.
 12. Deploy to Vercel from GitHub. Done, then repeated after pushes.
@@ -80,8 +80,7 @@ Build and launch a free-tier MVP for a Nigeria 2027 virtual voting simulation. T
 - Configure Supabase email OTP delivery with built-in email or free SMTP.
 - Test the full passkey vote flow on HTTPS after each Vercel deployment.
 - Test the full email OTP vote flow after Supabase Auth email settings are confirmed.
-- Test the CMS login, candidate save, and poll save flow after `cms_admin_setup.sql` is run.
-- Add CMS image upload support instead of URL-only image fields.
+- Test the CMS login, candidate save, poll save, and image upload flow after `cms_admin_setup.sql` is run.
 - Add real AdSense slot IDs after AdSense approval.
 - Enable AdSense Auto Ads/vignette ads from the Google AdSense dashboard.
 - Submit the sitemap in Google Search Console.

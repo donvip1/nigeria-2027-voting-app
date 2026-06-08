@@ -4,13 +4,17 @@
  Description:           CMS data access helpers for authenticated candidate editing.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added Supabase admin OTP login with deployed redirect, allow-list checks, candidate and poll loading, content updates, and logout helpers.
+ Modification Notes:    Added Supabase admin OTP login with deployed redirect, allow-list checks, candidate and poll loading, content updates, image uploads, and logout helpers.
 *********************************************************/
 
 // ========================================================
 // Imports and Supabase dependency
 // ========================================================
 import { supabase, isSupabaseConfigured } from './supabase';
+
+const candidateAssetsBucket = 'candidate-assets';
+const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
+const maxImageBytes = 2 * 1024 * 1024;
 
 // ========================================================
 // CMS authentication helpers
@@ -123,6 +127,40 @@ export async function updateCmsCandidate(candidateId, updates) {
   return data;
 }
 
+export async function uploadCmsCandidateAsset({ candidate, assetType, file }) {
+  ensureCmsReady();
+
+  if (!file) {
+    throw new Error('Choose an image file before uploading.');
+  }
+
+  if (!allowedImageTypes.includes(file.type)) {
+    throw new Error('Upload a JPG, PNG, or WebP image.');
+  }
+
+  if (file.size > maxImageBytes) {
+    throw new Error('Image must be 2 MB or smaller.');
+  }
+
+  const folder = slugifyPath(candidate.slug || candidate.id || 'candidate');
+  const extension = getFileExtension(file);
+  const fileName = `${assetType}-${Date.now()}-${Math.round(Math.random() * 100000)}.${extension}`;
+  const filePath = `${folder}/${fileName}`;
+
+  const { error } = await supabase.storage
+    .from(candidateAssetsBucket)
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      contentType: file.type,
+      upsert: false
+    });
+
+  if (error) throw error;
+
+  const { data } = supabase.storage.from(candidateAssetsBucket).getPublicUrl(filePath);
+  return data.publicUrl;
+}
+
 export async function updateCmsPoll(pollId, updates) {
   ensureCmsReady();
 
@@ -165,4 +203,22 @@ function ensureCmsReady() {
   if (!isSupabaseConfigured || !supabase) {
     throw new Error('CMS requires Supabase environment variables.');
   }
+}
+
+function getFileExtension(file) {
+  const extensionByType = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp'
+  };
+
+  return extensionByType[file.type] || 'png';
+}
+
+function slugifyPath(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '') || 'candidate';
 }

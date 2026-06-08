@@ -1153,6 +1153,57 @@ textarea {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.cms-media-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cms-image-field {
+  border: 1px solid #e1e7e0;
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 96px minmax(0, 1fr);
+  padding: 12px;
+}
+
+.cms-image-preview {
+  align-items: center;
+  aspect-ratio: 1;
+  background: #eef2ed;
+  border: 1px solid #dce8dd;
+  border-radius: 8px;
+  color: #647368;
+  display: flex;
+  font-size: 0.82rem;
+  font-weight: 800;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+}
+
+.cms-image-preview img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.cms-image-controls {
+  display: grid;
+  gap: 10px;
+}
+
+.cms-image-controls label {
+  display: grid;
+  font-weight: 750;
+  gap: 8px;
+}
+
+.cms-file-input {
+  display: none;
+}
+
 .cms-option-list {
   border-top: 1px solid #edf0eb;
   display: grid;
@@ -1429,6 +1480,8 @@ textarea {
 
   .verification-panel__header,
   .cms-form-grid,
+  .cms-media-grid,
+  .cms-image-field,
   .cms-option-row {
     grid-template-columns: 1fr;
   }
