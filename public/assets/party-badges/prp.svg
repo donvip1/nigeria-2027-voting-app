@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title">
-  <title id="title">PRP simulation party badge</title>
-  <rect width="160" height="160" rx="36" fill="#b3261e"/>
-  <circle cx="80" cy="70" r="39" fill="#ffffff"/>
-  <path d="M60 72h40M80 52v40" stroke="#b3261e" stroke-width="10" stroke-linecap="round"/>
-  <path d="M52 112h56" stroke="#ffc107" stroke-width="12" stroke-linecap="round"/>
-  <text x="80" y="137" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#ffffff">PRP</text>
-</svg>

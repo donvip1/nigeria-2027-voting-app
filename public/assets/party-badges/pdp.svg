@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title">
-  <title id="title">PDP simulation party badge</title>
-  <rect width="160" height="160" rx="36" fill="#0b8f3a"/>
-  <circle cx="80" cy="70" r="38" fill="#ffffff"/>
-  <path d="M55 73c14-20 36-20 50 0M55 89c14-13 36-13 50 0" fill="none" stroke="#0b8f3a" stroke-width="9" stroke-linecap="round"/>
-  <text x="80" y="137" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#ffffff">PDP</text>
-</svg>

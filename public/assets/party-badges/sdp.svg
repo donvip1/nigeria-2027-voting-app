@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title">
-  <title id="title">SDP simulation party badge</title>
-  <rect width="160" height="160" rx="36" fill="#0062a3"/>
-  <path d="M45 96c20-48 50-48 70 0" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round"/>
-  <circle cx="80" cy="68" r="20" fill="#ffc107"/>
-  <path d="M42 112h76" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
-  <text x="80" y="138" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#ffffff">SDP</text>
-</svg>

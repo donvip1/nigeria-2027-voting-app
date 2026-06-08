@@ -4,39 +4,47 @@
  Description:           Candidate portrait and party badge asset mapping for the virtual voting app.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added local fallback assets for Supabase and demo-mode candidate records.
+ Modification Notes:    Added real candidate image paths and INEC party logo fallback assets.
 *********************************************************/
 
 // ========================================================
 // Candidate portrait and party badge fallback maps
 // ========================================================
 const candidatePortraits = {
-  'apc-tinubu': '/assets/candidates/apc-tinubu.svg',
-  'adc-atiku': '/assets/candidates/adc-atiku.svg',
-  'ndc-obi': '/assets/candidates/ndc-obi.svg',
-  'prp-duke': '/assets/candidates/prp-duke.svg',
-  'sdp-adebayo': '/assets/candidates/sdp-adebayo.svg',
-  'aac-sowore': '/assets/candidates/aac-sowore.svg',
-  'pdp-onor': '/assets/candidates/pdp-onor.svg'
+  'apc-tinubu': '/assets/candidates/apc-tinubu.png',
+  'adc-atiku': '/assets/candidates/adc-atiku.png',
+  'ndc-obi': '/assets/candidates/ndc-obi.png',
+  'prp-duke': '/assets/candidates/prp-duke.png',
+  'sdp-adebayo': '/assets/candidates/sdp-adebayo.png',
+  'aac-sowore': '/assets/candidates/aac-sowore.jpg',
+  'pdp-onor': '/assets/candidates/pdp-onor.png'
 };
 
 const partyBadges = {
-  APC: '/assets/party-badges/apc.svg',
-  ADC: '/assets/party-badges/adc.svg',
-  NDC: '/assets/party-badges/ndc.svg',
-  PRP: '/assets/party-badges/prp.svg',
-  SDP: '/assets/party-badges/sdp.svg',
-  AAC: '/assets/party-badges/aac.svg',
-  PDP: '/assets/party-badges/pdp.svg'
+  APC: '/assets/party-badges/apc.jpg',
+  ADC: '/assets/party-badges/adc.jpg',
+  NDC: '/assets/party-badges/ndc.jpeg',
+  PRP: '/assets/party-badges/prp.png',
+  SDP: '/assets/party-badges/sdp.png',
+  AAC: '/assets/party-badges/aac.jpg',
+  PDP: '/assets/party-badges/pdp.jpg'
 };
 
 // ========================================================
 // Candidate asset resolver helpers
 // ========================================================
 export function getCandidatePortrait(candidate) {
-  return candidate?.photo_url || candidatePortraits[candidate?.slug] || '';
+  if (candidate?.photo_url && !candidate.photo_url.endsWith('.svg')) {
+    return candidate.photo_url;
+  }
+
+  return candidatePortraits[candidate?.slug] || '';
 }
 
 export function getPartyBadge(candidate) {
-  return candidate?.logo_url || partyBadges[candidate?.party_code] || '';
+  if (candidate?.logo_url && !candidate.logo_url.endsWith('.svg')) {
+    return candidate.logo_url;
+  }
+
+  return partyBadges[candidate?.party_code] || '';
 }

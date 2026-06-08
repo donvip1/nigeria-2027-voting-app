@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title">
-  <title id="title">APC simulation party badge</title>
-  <rect width="160" height="160" rx="36" fill="#008751"/>
-  <circle cx="80" cy="62" r="34" fill="#ffffff" opacity=".96"/>
-  <path d="M49 108h62" stroke="#ffffff" stroke-width="13" stroke-linecap="round"/>
-  <path d="M58 62h44M80 40v44" stroke="#008751" stroke-width="9" stroke-linecap="round"/>
-  <text x="80" y="132" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#ffffff">APC</text>
-</svg>
