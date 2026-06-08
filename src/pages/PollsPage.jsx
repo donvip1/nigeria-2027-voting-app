@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Public issue polls page and poll vote submission flow.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added poll loading, participant checks, vote submission, and poll result display.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added poll loading, participant checks, vote submission, poll result display, and policy-safe in-content ad placement.
 *********************************************************/
 
 // ========================================================
@@ -79,10 +79,10 @@ export default function PollsPage({ participant, setParticipant }) {
   // ========================================================
   // Polls page layout
   // ========================================================
+  const canShowContentAd = !loading && polls.length > 0;
+
   return (
     <main className="page-shell page-shell--narrow">
-      <AdSlot />
-
       <section className="section-heading">
         <div>
           <p className="eyebrow">Additional categories</p>
@@ -113,7 +113,7 @@ export default function PollsPage({ participant, setParticipant }) {
         </div>
       )}
 
-      <AdSlot label="Advertisement space" variant="wide" />
+      {canShowContentAd && <AdSlot label="Advertisement space" variant="wide" />}
     </main>
   );
 }

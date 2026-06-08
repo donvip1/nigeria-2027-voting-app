@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Lightweight CMS page for authenticated candidate content editing.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added email OTP and password admin login, admin allow-list verification, candidate and poll editor forms, candidate image uploads, and save/logout controls.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added email OTP and password admin login, admin allow-list verification, candidate and poll editor forms, candidate image uploads, save/logout controls, and no-ad admin layout.
 *********************************************************/
 
 // ========================================================
@@ -12,7 +12,6 @@
 // ========================================================
 import { useEffect, useState } from 'react';
 import { ListChecks, Lock, LogOut, Save, Upload } from 'lucide-react';
-import AdSlot from '../components/AdSlot';
 import {
   fetchCmsCandidates,
   fetchCmsPolls,
@@ -288,8 +287,6 @@ export default function CmsPage() {
   // ========================================================
   return (
     <main className="page-shell page-shell--narrow">
-      <AdSlot />
-
       <section className="legal-hero">
         <div className="legal-hero__icon">
           <Lock aria-hidden="true" size={28} />

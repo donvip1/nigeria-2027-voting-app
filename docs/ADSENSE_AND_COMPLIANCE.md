@@ -4,8 +4,8 @@
  Year Created:          2026
  Description:           Advertising and compliance notes for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added AdSense-safe placement rules, Auto Ads/vignette guidance, readiness checklist, ads.txt setup, revenue caveats, publisher client ID, slot variables, and implementation notes.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added policy-violation response, AdSense-safe placement rules, Auto Ads/vignette guidance, ads.txt setup, publisher client ID, Naija Vote slot ID, and implementation notes.
 *********************************************************/
 -->
 
@@ -17,14 +17,29 @@
 
 ## AdSense-Safe Direction
 
-The app uses normal ad placements only:
+The app uses in-content ad placements only:
 
-- top page banner;
-- in-content result slot;
-- lower page banner;
+- lower page ad after the presidential candidate list has loaded;
+- lower page ad after public polls have loaded;
+- in-content result ad after result rows have loaded;
 - optional AdSense Auto Ads after approval.
 
 Do not add forced countdowns, popups that block voting for ad views, fake close buttons, click prompts, or messages asking users to support the site by clicking ads.
+
+<!-- ========================================================
+     Current policy violation response
+     ======================================================== -->
+
+## Current Policy Violation Response
+
+Google flagged the site for ads on screens without publisher content. The app now follows these rules:
+
+- no ads at the top of pages before useful content;
+- no ads on CMS, login, admin, contact, privacy, empty, loading, warning-only, or error-only screens;
+- no ad requests from global HTML on every route;
+- ad requests load only from `AdSlot` after approved public content exists on the page.
+
+Keep this restriction in place during AdSense review. Add more ad placements only after the site has enough original public content around each placement.
 
 <!-- ========================================================
      Page-transition ads
@@ -66,10 +81,16 @@ AdSense revenue depends on approval, traffic quality, region, page RPM, content 
 
 ## Implementation Note
 
-The AdSense loader script is installed with this publisher client ID:
+`AdSlot` dynamically loads the AdSense script only when a policy-safe ad placement is rendered. It uses this publisher client ID:
 
 ```text
 ca-pub-1294576989935252
+```
+
+The active `naija vote` ad unit slot ID is:
+
+```text
+6116650504
 ```
 
 The required `ads.txt` file is available at:
@@ -84,7 +105,7 @@ For this project, it contains:
 google.com, pub-1294576989935252, DIRECT, f08c47fec0942fa0
 ```
 
-Keep `AdSlot` placeholders until approval or until specific ad-unit slot IDs are available. After approval, create display ad units in AdSense and add the slot IDs to Vercel:
+The app currently uses `6116650504` as the default display ad slot for approved in-content placements. If you create separate ad units later, add the slot IDs to Vercel:
 
 ```bash
 VITE_ADSENSE_BANNER_SLOT=

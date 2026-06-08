@@ -3,15 +3,14 @@
  Year Created:          2026
  Description:           Public contact page for the Nigeria 2027 virtual voting app.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added public email, request categories, response expectations, and simulation reminder.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added public email, request categories, response expectations, simulation reminder, and policy-safe no-ad contact layout.
 *********************************************************/
 
 // ========================================================
 // Imports and page constants
 // ========================================================
 import { Mail } from 'lucide-react';
-import AdSlot from '../components/AdSlot';
 import Disclaimer from '../components/Disclaimer';
 
 const contactEmail = 'veezee4us@gmail.com';
@@ -22,8 +21,6 @@ const contactEmail = 'veezee4us@gmail.com';
 export default function ContactPage() {
   return (
     <main className="page-shell page-shell--narrow">
-      <AdSlot />
-
       <section className="legal-hero">
         <div className="legal-hero__icon">
           <Mail aria-hidden="true" size={28} />

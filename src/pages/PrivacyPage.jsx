@@ -3,15 +3,14 @@
  Year Created:          2026
  Description:           Public privacy policy page for the Nigeria 2027 virtual voting app.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added data collection, passkey and OTP disclosure, Supabase storage, AdSense cookie disclosure, user choices, and contact details.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added data collection, passkey and OTP disclosure, Supabase storage, AdSense cookie disclosure, user choices, contact details, and policy-safe no-ad legal page layout.
 *********************************************************/
 
 // ========================================================
 // Imports and page constants
 // ========================================================
 import { ShieldCheck } from 'lucide-react';
-import AdSlot from '../components/AdSlot';
 import Disclaimer from '../components/Disclaimer';
 
 const contactEmail = 'veezee4us@gmail.com';
@@ -22,8 +21,6 @@ const contactEmail = 'veezee4us@gmail.com';
 export default function PrivacyPage() {
   return (
     <main className="page-shell page-shell--narrow">
-      <AdSlot />
-
       <section className="legal-hero">
         <div className="legal-hero__icon">
           <ShieldCheck aria-hidden="true" size={28} />

@@ -3,15 +3,14 @@
  Year Created:          2026
  Description:           Project information page for simulation, privacy, and public user guidance.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Removed internal launch requirements and added public verification, results, privacy, and contact guidance.
+ Modified Date:         2026-06-09
+ Modification Notes:    Removed internal launch requirements, public guidance, and top-page advertising for AdSense policy safety.
 *********************************************************/
 
 // ========================================================
 // Imports and components
 // ========================================================
 import { BarChart3, ExternalLink, Mail, ShieldCheck } from 'lucide-react';
-import AdSlot from '../components/AdSlot';
 import Disclaimer from '../components/Disclaimer';
 
 // ========================================================
@@ -20,8 +19,6 @@ import Disclaimer from '../components/Disclaimer';
 export default function InfoPage({ onNavigate }) {
   return (
     <main className="page-shell page-shell--narrow">
-      <AdSlot />
-
       <section className="info-hero">
         <p className="eyebrow">Project information</p>
         <h2>About this virtual voting simulation</h2>

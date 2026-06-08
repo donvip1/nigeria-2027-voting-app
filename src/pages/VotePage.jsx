@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Presidential virtual voting page and vote submission flow.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added candidate image carousel, passkey setup, local test reset, verification status, participant status, candidate selection, confirmation modal, and submission handling.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added candidate image carousel, verification flow, local test reset, and policy-safe in-content ad placement.
 *********************************************************/
 
 // ========================================================
@@ -174,11 +174,10 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
   // Vote page layout
   // ========================================================
   const carouselCandidates = candidates.length > 0 ? [...candidates, ...candidates] : [];
+  const canShowContentAd = !loading && candidates.length > 0 && !hasLocalOnlyVoteMarker;
 
   return (
     <main className="page-shell">
-      <AdSlot />
-
       <section className="hero">
         <div className="hero__copy">
           <p className="eyebrow">Nigeria 2027 preference poll</p>
@@ -285,7 +284,7 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
         </div>
       )}
 
-      <AdSlot label="Advertisement space" variant="wide" />
+      {canShowContentAd && <AdSlot label="Advertisement space" variant="wide" />}
 
       <VoteConfirmation
         candidate={selectedCandidate}
