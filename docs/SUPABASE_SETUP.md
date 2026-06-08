@@ -5,7 +5,7 @@
  Description:           Supabase setup instructions for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added project creation, SQL setup, vote hash patch instructions, environment variables, tables, and public API notes.
+ Modification Notes:    Added project creation, SQL setup, vote hash patch instructions, test vote reset instructions, environment variables, tables, and public API notes.
 *********************************************************/
 -->
 
@@ -65,6 +65,41 @@ supabase/update_candidate_tickets.sql
 ```
 
 Do this instead of rerunning the full `supabase/seed.sql`, because the full seed file also creates starter poll questions.
+
+<!-- ========================================================
+     Clear test votes before public launch
+     ======================================================== -->
+
+## Clear Test Votes
+
+When development/testing is finished and you want a clean public launch, run:
+
+```text
+supabase/reset_test_votes.sql
+```
+
+This clears:
+
+- presidential vote submissions;
+- poll vote submissions;
+- participant test records;
+- poll option vote counts.
+
+This keeps:
+
+- candidates;
+- candidate photos;
+- party logos;
+- polls;
+- poll options;
+- database tables and functions.
+
+After resetting Supabase, also clear your browser test data if your own browser still says you already voted:
+
+1. Open the deployed app in your browser.
+2. Open browser settings for the site.
+3. Clear site data or local storage for the app domain.
+4. Reload the app and test with a fresh nickname.
 
 <!-- ========================================================
      Configure frontend environment variables
