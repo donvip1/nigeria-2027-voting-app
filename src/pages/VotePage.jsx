@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Presidential virtual voting page and vote submission flow.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added participant status, candidate selection, confirmation modal, and submission handling.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added passkey verification status, participant status, candidate selection, confirmation modal, and submission handling.
 *********************************************************/
 
 // ========================================================
@@ -17,6 +17,7 @@ import Disclaimer from '../components/Disclaimer';
 import ParticipantForm from '../components/ParticipantForm';
 import VoteConfirmation from '../components/VoteConfirmation';
 import { submitPresidentialVote } from '../lib/api';
+import { verifyStoredPasskey } from '../lib/fingerprint';
 
 // ========================================================
 // Vote page component and local vote state
@@ -25,6 +26,31 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [verificationMessage, setVerificationMessage] = useState('');
+  const [isVerifyingPasskey, setIsVerifyingPasskey] = useState(false);
+
+  // ========================================================
+  // Stored passkey re-verification handler
+  // ========================================================
+  async function handleVerifyPasskey() {
+    if (!participant?.hasPasskey) return;
+
+    setIsVerifyingPasskey(true);
+    setVerificationMessage('Waiting for your device fingerprint/passkey confirmation...');
+
+    try {
+      const verification = await verifyStoredPasskey();
+      setParticipant({
+        ...participant,
+        passkeyVerifiedAt: verification.verifiedAt
+      });
+      setVerificationMessage('Fingerprint/passkey verified for this session.');
+    } catch (passkeyError) {
+      setVerificationMessage(readablePasskeyError(passkeyError));
+    } finally {
+      setIsVerifyingPasskey(false);
+    }
+  }
 
   // ========================================================
   // Confirm and submit selected presidential candidate
@@ -83,10 +109,25 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
           <div>
             <p className="eyebrow">Participant</p>
             <h2>{participant.nickname}</h2>
+            <p className="muted">
+              {participant.hasPasskey
+                ? `Fingerprint/passkey enabled${
+                    participant.passkeyVerifiedAt ? ` - last verified ${formatVerifiedAt(participant.passkeyVerifiedAt)}` : ''
+                  }.`
+                : 'Nickname-only mode. Fingerprint/passkey was not saved for this participant.'}
+            </p>
+            {verificationMessage && <p className="auth-hint auth-hint--inline">{verificationMessage}</p>}
           </div>
-          <span className={participant.hasVoted ? 'status-pill status-pill--done' : 'status-pill'}>
-            {participant.hasVoted ? 'Presidential vote submitted' : 'Ready to vote'}
-          </span>
+          <div className="voter-status__actions">
+            <span className={participant.hasVoted ? 'status-pill status-pill--done' : 'status-pill'}>
+              {participant.hasVoted ? 'Presidential vote submitted' : 'Ready to vote'}
+            </span>
+            {participant.hasPasskey && (
+              <button type="button" className="button-secondary" onClick={handleVerifyPasskey} disabled={isVerifyingPasskey}>
+                {isVerifyingPasskey ? 'Verifying...' : 'Verify fingerprint'}
+              </button>
+            )}
+          </div>
         </section>
       )}
 
@@ -140,4 +181,23 @@ function readableVoteError(error) {
   }
 
   return message;
+}
+
+function readablePasskeyError(error) {
+  if (error?.name === 'NotAllowedError') {
+    return 'Fingerprint/passkey verification was cancelled or timed out.';
+  }
+
+  return error?.message || 'Fingerprint/passkey verification failed.';
+}
+
+function formatVerifiedAt(value) {
+  try {
+    return new Intl.DateTimeFormat(undefined, {
+      hour: 'numeric',
+      minute: '2-digit'
+    }).format(new Date(value));
+  } catch {
+    return 'recently';
+  }
 }

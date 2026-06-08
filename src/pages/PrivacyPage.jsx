@@ -4,7 +4,7 @@
  Description:           Public privacy policy page for the Nigeria 2027 virtual voting app.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added data collection, Supabase storage, AdSense cookie disclosure, user choices, and contact details.
+ Modification Notes:    Added data collection, passkey disclosure, Supabase storage, AdSense cookie disclosure, user choices, and contact details.
 *********************************************************/
 
 // ========================================================
@@ -49,6 +49,7 @@ export default function PrivacyPage() {
         <ul>
           <li>Nickname entered by you.</li>
           <li>Browser/device fingerprint created by the app to reduce duplicate submissions.</li>
+          <li>Passkey credential ID and verification timestamp if you choose fingerprint/passkey sign-in.</li>
           <li>Vote or poll selection metadata.</li>
           <li>IP metadata when a vote or poll submission is sent to Supabase.</li>
           <li>Basic technical information handled by hosting, analytics, ads, or database providers.</li>
@@ -71,7 +72,19 @@ export default function PrivacyPage() {
           Vote submissions are handled through controlled database functions.
         </p>
 
-        <h3>5. Google AdSense, Cookies, And Advertising</h3>
+        <h3>5. Fingerprint And Passkey Sign-In</h3>
+        <p>
+          If you choose fingerprint/passkey sign-in, the app uses your browser and device&apos;s
+          WebAuthn/passkey feature. The app does not receive your actual fingerprint, face scan, or
+          biometric template. Your device handles biometric verification locally and returns a
+          passkey credential result to the browser.
+        </p>
+        <p>
+          This feature is used only to improve local participant continuity and reduce casual
+          duplicate participation. It is not official identity verification.
+        </p>
+
+        <h3>6. Google AdSense, Cookies, And Advertising</h3>
         <p>
           This site includes Google AdSense code. Third-party vendors, including Google, may use
           cookies, web beacons, IP addresses, or other identifiers to serve ads and measure ad
@@ -92,26 +105,26 @@ export default function PrivacyPage() {
           .
         </p>
 
-        <h3>6. What Not To Submit</h3>
+        <h3>7. What Not To Submit</h3>
         <p>
           Do not use sensitive personal information as your nickname. Do not submit passwords,
           identification numbers, financial details, private political membership information, or
           any official election information through this site.
         </p>
 
-        <h3>7. Data Retention</h3>
+        <h3>8. Data Retention</h3>
         <p>
           Simulation data may be retained while the project is active, unless removal is required
           for maintenance, safety, legal compliance, or a valid privacy request.
         </p>
 
-        <h3>8. Contact And Privacy Requests</h3>
+        <h3>9. Contact And Privacy Requests</h3>
         <p>
           For questions, corrections, or privacy-related requests, contact{' '}
           <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
         </p>
 
-        <h3>9. Changes To This Policy</h3>
+        <h3>10. Changes To This Policy</h3>
         <p>
           This privacy policy may be updated as the site, database, advertising setup, or legal
           requirements change. The updated date above will reflect major changes.

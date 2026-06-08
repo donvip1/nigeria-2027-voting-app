@@ -4,7 +4,7 @@
  Description:           Global visual styles for the Nigeria 2027 virtual voting frontend.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-08
- Modification Notes:    Added responsive layout, logo, candidate visuals, party badges, cards, forms, navigation, results, polls, information, privacy, contact, and footer link styling.
+ Modification Notes:    Added responsive layout, logo, passkey controls, candidate visuals, party badges, cards, forms, navigation, results, polls, information, privacy, contact, and footer link styling.
 *********************************************************/
 
 /* ========================================================
@@ -315,6 +315,28 @@ input:focus-visible {
   gap: 10px;
 }
 
+.auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.auth-actions button {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.auth-primary {
+  flex: 1 1 240px;
+}
+
+.auth-actions .button-secondary {
+  flex: 0 1 auto;
+}
+
 input {
   background: #ffffff;
   border: 1px solid #bfcbc0;
@@ -338,6 +360,22 @@ input {
   color: #b3261e;
   font-weight: 700;
   margin: 8px 0 0;
+}
+
+.auth-hint {
+  color: #5c6b61;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.45;
+  margin: 10px 0 0;
+}
+
+.auth-hint--ok {
+  color: #006c43;
+}
+
+.auth-hint--inline {
+  margin-top: 8px;
 }
 
 .notice {
@@ -373,8 +411,19 @@ input {
   padding: 18px 20px;
 }
 
+.voter-status > div:first-child {
+  min-width: 0;
+}
+
 .voter-status h2 {
   margin: 0;
+}
+
+.voter-status__actions {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .status-pill,
@@ -920,6 +969,7 @@ input {
   }
 
   .inline-form,
+  .auth-actions,
   .modal__actions,
   .inline-actions {
     flex-direction: column;
@@ -927,8 +977,13 @@ input {
 
   .modal__actions button,
   .inline-form button,
+  .auth-actions button,
   .inline-actions button {
     width: 100%;
+  }
+
+  .voter-status__actions {
+    align-items: stretch;
   }
 
   .poll-option {

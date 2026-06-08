@@ -3,16 +3,16 @@
  Year Created:          2026
  Description:           Participant nickname form and local participant setup.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added nickname validation and browser fingerprint registration flow.
+ Modified Date:         2026-06-08
+ Modification Notes:    Added nickname validation, passkey/fingerprint registration, and browser fingerprint fallback flow.
 *********************************************************/
 
 // ========================================================
 // Imports and local state dependencies
 // ========================================================
-import { useState } from 'react';
-import { ShieldCheck } from 'lucide-react';
-import { saveParticipant } from '../lib/fingerprint';
+import { useEffect, useState } from 'react';
+import { Fingerprint, ShieldCheck } from 'lucide-react';
+import { getPasskeyAvailability, registerParticipantPasskey, saveParticipant } from '../lib/fingerprint';
 
 // ========================================================
 // Participant form component
@@ -20,12 +20,33 @@ import { saveParticipant } from '../lib/fingerprint';
 export default function ParticipantForm({ onParticipantReady }) {
   const [nickname, setNickname] = useState('');
   const [error, setError] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
+  const [passkeyAvailable, setPasskeyAvailable] = useState(false);
+  const [passkeyReason, setPasskeyReason] = useState('Checking fingerprint/passkey support...');
+  const [isRegisteringPasskey, setIsRegisteringPasskey] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function checkPasskeySupport() {
+      const availability = await getPasskeyAvailability();
+      if (!isMounted) return;
+
+      setPasskeyAvailable(availability.available);
+      setPasskeyReason(availability.reason);
+    }
+
+    checkPasskeySupport();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // ========================================================
   // Nickname validation and participant save handler
   // ========================================================
-  function handleSubmit(event) {
-    event.preventDefault();
+  function validateNickname() {
     const cleaned = nickname.trim();
 
     if (cleaned.length < 3) {
@@ -38,8 +59,45 @@ export default function ParticipantForm({ onParticipantReady }) {
       return;
     }
 
+    return cleaned;
+  }
+
+  // ========================================================
+  // Nickname-only participant save handler
+  // ========================================================
+  function handleSubmit(event) {
+    event.preventDefault();
+    const cleaned = validateNickname();
+
+    if (!cleaned) return;
+
     setError('');
+    setStatusMessage('Nickname saved. You can participate on this device.');
     onParticipantReady(saveParticipant(cleaned));
+  }
+
+  // ========================================================
+  // Passkey-backed participant registration handler
+  // ========================================================
+  async function handlePasskeyRegister() {
+    const cleaned = validateNickname();
+
+    if (!cleaned) return;
+
+    setIsRegisteringPasskey(true);
+    setError('');
+    setStatusMessage('Waiting for your device fingerprint/passkey confirmation...');
+
+    try {
+      const passkeyData = await registerParticipantPasskey(cleaned);
+      setStatusMessage('Fingerprint/passkey sign-in saved for this device.');
+      onParticipantReady(saveParticipant(cleaned, passkeyData));
+    } catch (passkeyError) {
+      setError(readablePasskeyError(passkeyError));
+      setStatusMessage('');
+    } finally {
+      setIsRegisteringPasskey(false);
+    }
   }
 
   // ========================================================
@@ -52,10 +110,10 @@ export default function ParticipantForm({ onParticipantReady }) {
       </div>
       <div>
         <p className="eyebrow">Start here</p>
-        <h2 id="participant-title">Enter a nickname to participate</h2>
+        <h2 id="participant-title">Sign in with fingerprint or nickname</h2>
         <p className="muted">
-          The MVP uses nickname, browser fingerprint, and IP metadata to reduce duplicate
-          submissions. This is suitable for a simulation, not a legally binding election.
+          Use a device passkey such as fingerprint, Face ID, Touch ID, or Windows Hello when
+          available. Nickname-only fallback is still allowed for this public simulation.
         </p>
       </div>
 
@@ -69,10 +127,43 @@ export default function ParticipantForm({ onParticipantReady }) {
             placeholder="e.g. LagosVoter2027"
             autoComplete="nickname"
           />
-          <button type="submit">Continue</button>
         </div>
+        <div className="auth-actions">
+          <button
+            type="button"
+            className="auth-primary"
+            onClick={handlePasskeyRegister}
+            disabled={!passkeyAvailable || isRegisteringPasskey}
+          >
+            <Fingerprint aria-hidden="true" size={18} />
+            <span>{isRegisteringPasskey ? 'Waiting for device...' : 'Use fingerprint/passkey'}</span>
+          </button>
+          <button type="submit" className="button-secondary">
+            Continue with nickname
+          </button>
+        </div>
+        <p className={passkeyAvailable ? 'auth-hint auth-hint--ok' : 'auth-hint'}>{passkeyReason}</p>
+        {statusMessage && <p className="auth-hint auth-hint--ok">{statusMessage}</p>}
         {error && <p className="form-error">{error}</p>}
       </form>
     </section>
   );
+}
+
+function readablePasskeyError(error) {
+  const message = error?.message || 'Fingerprint/passkey setup failed.';
+
+  if (error?.name === 'NotAllowedError') {
+    return 'Fingerprint/passkey setup was cancelled or timed out.';
+  }
+
+  if (error?.name === 'NotSupportedError') {
+    return 'This browser or device does not support fingerprint/passkey setup.';
+  }
+
+  if (error?.name === 'SecurityError') {
+    return 'Fingerprint/passkey setup requires HTTPS or localhost.';
+  }
+
+  return message;
 }
