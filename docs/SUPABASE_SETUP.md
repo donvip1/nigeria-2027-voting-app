@@ -67,6 +67,7 @@ For email OTP:
 3. Open `Providers`.
 4. Enable email authentication.
 5. Make sure email OTP/magic link settings are enabled.
+6. Add a custom SMTP provider if you want reliable delivery. See `docs/FREE_OTP_EMAIL_SETUP.md`.
 
 For phone OTP:
 

@@ -113,7 +113,7 @@ export default function ParticipantForm({ onParticipantReady }) {
         <h2 id="participant-title">Set up your voting profile</h2>
         <p className="muted">
           Use a device passkey such as fingerprint, Face ID, Touch ID, or Windows Hello when
-          available. If your device cannot use passkeys, the final vote step can use email or phone OTP.
+          available. If your device cannot use passkeys, the final vote step can use email OTP.
         </p>
       </div>
 

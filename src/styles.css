@@ -492,6 +492,10 @@ textarea:focus-visible {
   padding: 4px;
 }
 
+.otp-toggle--single {
+  grid-template-columns: 1fr;
+}
+
 .otp-toggle__button {
   align-items: center;
   background: transparent;

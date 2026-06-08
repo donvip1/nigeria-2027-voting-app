@@ -68,8 +68,7 @@ export default function InfoPage({ onNavigate }) {
         <h3>One verified virtual vote per participant</h3>
         <p>
           Before a presidential vote is submitted, the app asks for a fresh passkey confirmation.
-          When passkeys are not available, participants can use a Supabase OTP flow with email or
-          phone, depending on the project&apos;s enabled authentication settings.
+          When passkeys are not available, participants can use a Supabase email OTP flow.
         </p>
         <p>
           Public totals update from the database after successful submissions. Results are for

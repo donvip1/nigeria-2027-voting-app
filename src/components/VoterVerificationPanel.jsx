@@ -14,6 +14,8 @@ import { useState } from 'react';
 import { Fingerprint, Mail, Phone, ShieldCheck } from 'lucide-react';
 import { requestOtpCode, verifyOtpCode } from '../lib/otpAuth';
 
+const phoneOtpEnabled = import.meta.env.VITE_ENABLE_PHONE_OTP === 'true';
+
 // ========================================================
 // Voter verification panel component
 // ========================================================
@@ -105,26 +107,42 @@ export default function VoterVerificationPanel({
       </div>
 
       <div className="otp-grid">
-        <div className="otp-toggle" role="group" aria-label="OTP contact type">
+        {phoneOtpEnabled && (
+          <div className="otp-toggle" role="group" aria-label="OTP contact type">
+            <button
+              type="button"
+              className={contactType === 'email' ? 'otp-toggle__button otp-toggle__button--active' : 'otp-toggle__button'}
+              onClick={() => setContactType('email')}
+              disabled={disabled}
+            >
+              <Mail aria-hidden="true" size={16} />
+              <span>Email</span>
+            </button>
+            <button
+              type="button"
+              className={contactType === 'phone' ? 'otp-toggle__button otp-toggle__button--active' : 'otp-toggle__button'}
+              onClick={() => setContactType('phone')}
+              disabled={disabled}
+            >
+              <Phone aria-hidden="true" size={16} />
+              <span>Phone</span>
+            </button>
+          </div>
+        )}
+
+        {!phoneOtpEnabled && (
+          <div className="otp-toggle otp-toggle--single" aria-label="OTP contact type">
           <button
             type="button"
-            className={contactType === 'email' ? 'otp-toggle__button otp-toggle__button--active' : 'otp-toggle__button'}
+            className="otp-toggle__button otp-toggle__button--active"
             onClick={() => setContactType('email')}
             disabled={disabled}
           >
             <Mail aria-hidden="true" size={16} />
             <span>Email</span>
           </button>
-          <button
-            type="button"
-            className={contactType === 'phone' ? 'otp-toggle__button otp-toggle__button--active' : 'otp-toggle__button'}
-            onClick={() => setContactType('phone')}
-            disabled={disabled}
-          >
-            <Phone aria-hidden="true" size={16} />
-            <span>Phone</span>
-          </button>
-        </div>
+          </div>
+        )}
 
         <label htmlFor={`${safeId}-otp-contact`}>{contactType === 'phone' ? 'Phone number' : 'Email address'}</label>
         <div className="inline-form">

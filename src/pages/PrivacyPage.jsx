@@ -50,7 +50,7 @@ export default function PrivacyPage() {
           <li>Nickname entered by you.</li>
           <li>Browser/device fingerprint created by the app to reduce duplicate submissions.</li>
           <li>Passkey credential ID and verification timestamp if you choose fingerprint/passkey sign-in.</li>
-          <li>Email address or phone number if you choose OTP verification.</li>
+          <li>Email address if you choose OTP verification, and phone number only if phone OTP is enabled later.</li>
           <li>Vote or poll selection metadata.</li>
           <li>IP metadata when a vote or poll submission is sent to Supabase.</li>
           <li>Basic technical information handled by hosting, analytics, ads, or database providers.</li>
@@ -82,8 +82,7 @@ export default function PrivacyPage() {
         </p>
         <p>
           If passkeys are not available, the app may use Supabase Auth to send a one-time code to
-          your email address or phone number. Phone OTP depends on the project&apos;s SMS provider
-          configuration.
+          your email address. Phone OTP may be added later if the project enables an SMS provider.
         </p>
         <p>
           These features are used only to improve participant continuity and reduce casual duplicate
