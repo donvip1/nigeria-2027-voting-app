@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Final confirmation modal before submitting a virtual presidential vote.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added required final verification support, candidate summary, modal controls, and submit error display.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added launch-ready final verification support, candidate summary, modal controls, and submit error display.
 *********************************************************/
 
 // ========================================================
@@ -34,7 +34,7 @@ export default function VoteConfirmation({
         </button>
 
         <p className="eyebrow">Final confirmation</p>
-        <h2 id="confirm-title">Confirm your virtual vote</h2>
+        <h2 id="confirm-title">Confirm your preference vote</h2>
         <p className="muted">
           You are choosing <strong>{candidate.name}</strong> of {candidate.party_name}. This
           submission cannot be changed on this device.
@@ -43,7 +43,7 @@ export default function VoteConfirmation({
         <div className="confirmation-card">
           <span className="party-code">{candidate.party_code}</span>
           <h3>{candidate.name}</h3>
-          <p>{candidate.running_mate ? `Running mate: ${candidate.running_mate}` : 'Running mate: TBA'}</p>
+          <p>{candidate.running_mate ? `Running mate: ${candidate.running_mate}` : 'Running mate: To be announced'}</p>
         </div>
 
         {verificationPanel}

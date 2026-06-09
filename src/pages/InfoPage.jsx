@@ -4,7 +4,7 @@
  Description:           Project information page for simulation, privacy, and public user guidance.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-09
- Modification Notes:    Removed internal launch requirements, public guidance, and top-page advertising for AdSense policy safety.
+ Modification Notes:    Added launch-ready public poll guidance, privacy summary, participation details, and no-ad info layout.
 *********************************************************/
 
 // ========================================================
@@ -21,10 +21,10 @@ export default function InfoPage({ onNavigate }) {
     <main className="page-shell page-shell--narrow">
       <section className="info-hero">
         <p className="eyebrow">Project information</p>
-        <h2>About this virtual voting simulation</h2>
+        <h2>About this public opinion poll</h2>
         <p>
-          Nigeria 2027 Virtual Vote is a public opinion product built to measure visitor sentiment
-          around a simulated presidential preference poll and related policy questions.
+          Nigeria 2027 Virtual Vote is an independent public opinion platform built to measure
+          visitor sentiment around presidential preference choices and related policy questions.
         </p>
       </section>
 
@@ -33,7 +33,7 @@ export default function InfoPage({ onNavigate }) {
       <div className="info-grid">
         <InfoCard title="What this app is" icon={<ShieldCheck aria-hidden="true" size={22} />}>
           <p>
-            A free web-based opinion simulation with nickname participation, duplicate-vote
+            A free web-based opinion poll with nickname participation, duplicate-vote
             reduction, public results, and extra public polls.
           </p>
         </InfoCard>
@@ -62,7 +62,7 @@ export default function InfoPage({ onNavigate }) {
 
       <section className="requirements-panel">
         <p className="eyebrow">How participation works</p>
-        <h3>One verified virtual vote per participant</h3>
+        <h3>One verified preference vote per participant</h3>
         <p>
           Before a presidential vote is submitted, the app asks for a fresh passkey confirmation.
           When passkeys are not available, participants can use a Supabase email OTP flow.

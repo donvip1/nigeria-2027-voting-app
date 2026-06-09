@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Candidate display card for the presidential virtual ballot.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added candidate portrait, party badge, simulation ticket display, vote count, running mate, and selection button states.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added launch-ready candidate portrait, party badge, ticket display, vote count, running mate, and selection button states.
 *********************************************************/
 
 // ========================================================
@@ -23,9 +23,9 @@ export default function CandidateCard({ candidate, disabled, disabledReason = 'U
   return (
     <article className="candidate-card">
       <div className="candidate-portrait-wrap">
-        <img className="candidate-portrait" src={portrait} alt={`${candidate.name} stylized simulation portrait`} />
+        <img className="candidate-portrait" src={portrait} alt={`${candidate.name} portrait`} />
         {partyBadge && (
-          <img className="candidate-party-badge" src={partyBadge} alt={`${candidate.party_code} simulation party badge`} />
+          <img className="candidate-party-badge" src={partyBadge} alt={`${candidate.party_code} party badge`} />
         )}
       </div>
 
@@ -43,13 +43,13 @@ export default function CandidateCard({ candidate, disabled, disabledReason = 'U
       <p className="candidate-card__body">{candidate.background_text}</p>
 
       <div className="ticket-pair">
-        <span>Simulation ticket</span>
+        <span>Presidential ticket</span>
         <strong>{candidate.name}</strong>
-        <small>{candidate.running_mate || 'Running mate pending'}</small>
+        <small>{candidate.running_mate || 'Running mate to be announced'}</small>
       </div>
 
       <div className="candidate-card__meta">
-        <span>Running mate: {candidate.running_mate || 'Pending confirmation'}</span>
+        <span>Running mate: {candidate.running_mate || 'To be announced'}</span>
         <strong>{Number(candidate.vote_count || 0).toLocaleString()} votes</strong>
       </div>
 

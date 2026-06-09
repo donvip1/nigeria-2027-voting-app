@@ -4,7 +4,7 @@
  Description:           Advertisement slot component for policy-safe AdSense display slots.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-09
- Modification Notes:    Added dynamic AdSense loading so Google ads only request on approved content-rich placements.
+ Modification Notes:    Added dynamic AdSense loading so Google ads only request on approved content-rich placements and launch-ready fallback copy.
 *********************************************************/
 
 // ========================================================
@@ -110,7 +110,7 @@ export default function AdSlot({ label = 'Advertisement', variant = 'banner', sl
   return (
     <aside className={`ad-slot ad-slot--${variant}`} aria-label={label}>
       <Megaphone aria-hidden="true" size={18} />
-      <span>{label} reserved</span>
+      <span>{label}</span>
     </aside>
   );
 }

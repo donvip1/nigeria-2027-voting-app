@@ -4,7 +4,7 @@
  Description:           Results page for live-style virtual vote totals and rankings.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-09
- Modification Notes:    Added vote totals, leader summary, party badges, ranked rows, progress bars, and policy-safe result-page ads.
+ Modification Notes:    Added launch-ready public poll totals, share links, result discussion, party badges, ranked rows, progress bars, and policy-safe result-page ads.
 *********************************************************/
 
 // ========================================================
@@ -12,12 +12,14 @@
 // ========================================================
 import AdSlot from '../components/AdSlot';
 import Disclaimer from '../components/Disclaimer';
+import ResultDiscussion from '../components/ResultDiscussion';
+import ShareResults from '../components/ShareResults';
 import { getPartyBadge } from '../lib/candidateAssets';
 
 // ========================================================
 // Results page component
 // ========================================================
-export default function ResultsPage({ candidates, loading }) {
+export default function ResultsPage({ candidates, participant, loading }) {
   const totalVotes = candidates.reduce((sum, candidate) => sum + Number(candidate.vote_count || 0), 0);
   const leader = candidates[0];
   const canShowContentAd = !loading && candidates.length > 0;
@@ -28,11 +30,11 @@ export default function ResultsPage({ candidates, loading }) {
 
       <section className="results-summary">
         <div>
-          <p className="eyebrow">Live simulation results</p>
-          <h2>{totalVotes.toLocaleString()} total virtual votes</h2>
+          <p className="eyebrow">Live public poll results</p>
+          <h2>{totalVotes.toLocaleString()} total preference votes</h2>
           <p>
             {leader
-              ? `${leader.name} currently leads this simulation with ${getPercentage(leader.vote_count, totalVotes)}%.`
+              ? `${leader.name} currently leads this public poll with ${getPercentage(leader.vote_count, totalVotes)}%.`
               : 'Results will appear after candidates load.'}
           </p>
         </div>
@@ -69,6 +71,10 @@ export default function ResultsPage({ candidates, loading }) {
           })
         )}
       </section>
+
+      <ShareResults />
+
+      <ResultDiscussion participant={participant} />
 
       {canShowContentAd && <AdSlot label="In-content advertisement" variant="rectangle" />}
     </main>

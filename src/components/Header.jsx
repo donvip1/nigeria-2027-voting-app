@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Header navigation for the Nigeria 2027 virtual voting app.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added Nigeria-themed brand logo and clean URL tab navigation for vote, results, polls, and info pages.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added launch-ready brand copy, Nigeria-themed brand logo, and clean URL tab navigation.
 *********************************************************/
 
 // ========================================================
@@ -38,7 +38,7 @@ export default function Header({ currentPage, onNavigate }) {
             alt="Nigeria 2027 Virtual Vote logo"
           />
           <div>
-            <p className="eyebrow">Public opinion simulation</p>
+            <p className="eyebrow">Independent public opinion poll</p>
             <h1>Nigeria 2027 Virtual Vote</h1>
           </div>
         </div>

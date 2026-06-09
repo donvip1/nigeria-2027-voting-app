@@ -4,7 +4,7 @@
  Description:           Public privacy policy page for the Nigeria 2027 virtual voting app.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-09
- Modification Notes:    Added data collection, passkey and OTP disclosure, Supabase storage, AdSense cookie disclosure, user choices, contact details, and policy-safe no-ad legal page layout.
+ Modification Notes:    Added launch-ready data collection, passkey and OTP disclosure, Supabase storage, AdSense cookie disclosure, user choices, contact details, and no-ad legal page layout.
 *********************************************************/
 
 // ========================================================
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
       <section className="legal-panel">
         <h3>1. What This Site Is</h3>
         <p>
-          Nigeria 2027 Virtual Vote is a public opinion simulation. It is not an official election
+          Nigeria 2027 Virtual Vote is an independent public opinion poll. It is not an official election
           platform, it is not affiliated with INEC, and it does not collect official votes.
         </p>
 
@@ -56,7 +56,7 @@ export default function PrivacyPage() {
         <h3>3. How We Use Information</h3>
         <p>We use this information to:</p>
         <ul>
-          <li>Record simulation votes and public poll choices.</li>
+          <li>Record preference votes and public poll choices.</li>
           <li>Reduce casual duplicate voting.</li>
           <li>Show public result totals.</li>
           <li>Maintain, troubleshoot, and improve the site.</li>
@@ -116,7 +116,7 @@ export default function PrivacyPage() {
 
         <h3>8. Data Retention</h3>
         <p>
-          Simulation data may be retained while the project is active, unless removal is required
+          Public poll data may be retained while the project is active, unless removal is required
           for maintenance, safety, legal compliance, or a valid privacy request.
         </p>
 

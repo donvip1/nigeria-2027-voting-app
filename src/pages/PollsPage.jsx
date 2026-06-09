@@ -30,7 +30,7 @@ export default function PollsPage({ participant, setParticipant }) {
   }, []);
 
   // ========================================================
-  // Poll loading from Supabase or local demo storage
+  // Poll loading from the configured data service
   // ========================================================
   async function refreshPolls() {
     setLoading(true);

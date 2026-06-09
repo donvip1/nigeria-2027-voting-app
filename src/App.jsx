@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Main app shell, page navigation, candidate loading, and global layout.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added privacy, contact, CMS page routing, clean URL and hash navigation, footer navigation, and public compliance links.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added launch-ready public layout, live-style result refresh, results discussion state, clean URL navigation, footer compliance links, and removed public admin/demo notices.
 *********************************************************/
 
 // ========================================================
@@ -22,7 +22,7 @@ import ContactPage from './pages/ContactPage';
 import CmsPage from './pages/CmsPage';
 import { fetchCandidates } from './lib/api';
 import { getStoredParticipant } from './lib/fingerprint';
-import { isSupabaseConfigured } from './lib/supabase';
+import { isSupabaseConfigured, supabase } from './lib/supabase';
 
 const routablePages = ['vote', 'results', 'polls', 'info', 'privacy', 'contact', 'cms'];
 
@@ -53,6 +53,30 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const refreshTimer = window.setInterval(() => {
+      refreshCandidates();
+    }, 15000);
+
+    return () => {
+      window.clearInterval(refreshTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return undefined;
+
+    const resultRefreshChannel = supabase
+      .channel('public-result-refresh')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'presidential_votes' }, refreshCandidates)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'poll_options' }, refreshCandidates)
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(resultRefreshChannel);
+    };
+  }, []);
+
   // ========================================================
   // App navigation helper
   // ========================================================
@@ -70,7 +94,7 @@ export default function App() {
   }
 
   // ========================================================
-  // Candidate loading from Supabase or local demo storage
+  // Candidate loading from the configured data service
   // ========================================================
   async function refreshCandidates() {
     setLoadingCandidates(true);
@@ -91,12 +115,6 @@ export default function App() {
     <div className="app">
       <Header currentPage={currentPage} onNavigate={handleNavigate} />
 
-      {!isSupabaseConfigured && (
-        <div className="demo-ribbon">
-          Demo mode: add Supabase environment variables to persist real submissions.
-        </div>
-      )}
-
       {loadError && <p className="notice notice--error">{loadError}</p>}
 
       {currentPage === 'vote' && (
@@ -110,7 +128,7 @@ export default function App() {
       )}
 
       {currentPage === 'results' && (
-        <ResultsPage candidates={candidates} loading={loadingCandidates} />
+        <ResultsPage candidates={candidates} participant={participant} loading={loadingCandidates} />
       )}
 
       {currentPage === 'polls' && (
@@ -142,17 +160,10 @@ export default function App() {
           >
             Contact
           </a>
-          <a
-            href="/cms"
-            className="text-link"
-            onClick={(event) => handleFooterNavigate(event, 'cms')}
-          >
-            CMS
-          </a>
         </nav>
         <p>
-          Nigeria 2027 Virtual Vote is built as a public simulation and educational product. Verify
-          official election information with INEC and trusted primary sources.
+          Nigeria 2027 Virtual Vote is an independent public opinion platform. Verify official
+          election information with INEC and trusted primary sources.
         </p>
       </footer>
     </div>

@@ -4,7 +4,7 @@
  Description:           Public contact page for the Nigeria 2027 virtual voting app.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-09
- Modification Notes:    Added public email, request categories, response expectations, simulation reminder, and policy-safe no-ad contact layout.
+ Modification Notes:    Added public email, request categories, response expectations, independent-poll reminder, and policy-safe no-ad contact layout.
 *********************************************************/
 
 // ========================================================
@@ -63,8 +63,8 @@ export default function ContactPage() {
 
         <h3>Important Reminder</h3>
         <p>
-          This site is a virtual public opinion simulation. It is not an official election body,
-          ballot system, campaign platform, or party primary.
+          This site is an independent public opinion poll. It is not an official election body,
+          official ballot system, campaign platform, or party primary.
         </p>
       </section>
     </main>

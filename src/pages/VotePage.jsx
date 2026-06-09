@@ -4,7 +4,7 @@
  Description:           Presidential virtual voting page and vote submission flow.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-09
- Modification Notes:    Added candidate image carousel, verification flow, local test reset, and policy-safe in-content ad placement.
+ Modification Notes:    Added launch-ready candidate carousel, verification flow, browser vote reset, and policy-safe in-content ad placement.
 *********************************************************/
 
 // ========================================================
@@ -136,7 +136,7 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
       ...participant,
       hasVoted: false
     });
-    setVerificationMessage('Local test vote marker cleared on this browser.');
+    setVerificationMessage('This browser vote status has been reset.');
   }
 
   // ========================================================
@@ -181,13 +181,13 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
       <section className="hero">
         <div className="hero__copy">
           <p className="eyebrow">Nigeria 2027 preference poll</p>
-          <h2>Choose a presidential ticket in the public simulation.</h2>
+          <h2>Choose a presidential ticket in the public opinion poll.</h2>
           <p>
-            Review each candidate, running mate, and party badge before submitting one virtual
-            preference vote. This is public sentiment software, not an official election platform.
+            Review each candidate, running mate, and party badge before submitting one public
+            preference vote. This is independent public sentiment software, not an official election platform.
           </p>
         </div>
-        <div className="hero__visual" aria-label={`${candidates.length} simulation candidates loaded`}>
+        <div className="hero__visual" aria-label={`${candidates.length} candidates loaded`}>
           <div className="hero-carousel">
             <div className="hero-carousel__track">
               {carouselCandidates.map((candidate, index) => (
@@ -237,7 +237,7 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
                 onClick={handleClearLocalVoteMarkers}
               >
                 <RotateCcw aria-hidden="true" size={17} />
-                <span>Clear local test vote</span>
+                <span>Reset browser vote status</span>
               </button>
             )}
             {!participant.hasPasskey && (
@@ -257,18 +257,18 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
 
       <section className="section-heading">
         <div>
-          <p className="eyebrow">Ballot simulation</p>
+          <p className="eyebrow">Public preference ballot</p>
           <h2>Select your preferred ticket</h2>
         </div>
-        <p>Candidate data is editable simulation content and should be updated when final official lists exist.</p>
+        <p>Candidate and running-mate information can be updated as publicly available details change.</p>
       </section>
 
       {loading ? (
         <div className="empty-state">Loading candidates...</div>
       ) : hasLocalOnlyVoteMarker ? (
         <div className="notice notice--warning">
-          Supabase vote totals are reset, but this browser still has an old local test vote marker.
-          Click `Clear local test vote` above to vote again on this browser.
+          This browser still has a previous vote status saved locally. Use `Reset browser vote status`
+          above only if the public vote database has been reset.
         </div>
       ) : (
         <div className="candidate-grid">
@@ -317,17 +317,17 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
 }
 
 // ========================================================
-// Supabase and demo-mode error message formatting
+// Public vote error message formatting
 // ========================================================
 function readableVoteError(error) {
   const message = error?.message || 'Vote submission failed.';
 
   if (message.includes('function digest')) {
-    return 'Database setup needs the latest Supabase vote-function patch. Run supabase/fix_vote_hash_function.sql in Supabase SQL Editor, then submit again.';
+    return 'Vote submission is temporarily unavailable. Please try again later or contact support if this continues.';
   }
 
   if (message.includes('duplicate')) {
-    return 'This device or nickname has already submitted a presidential virtual vote.';
+    return 'This device or nickname has already submitted a presidential preference vote.';
   }
 
   return message;

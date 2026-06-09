@@ -1,23 +1,23 @@
 /*********************************************************
  Author:                Philip Awazie Donvip
  Year Created:          2026
- Description:           Local seed data for demo-mode candidates and public polls.
+ Description:           Development seed data for candidates and public polls.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added real candidate image paths, party logo paths, and full simulation running-mate ticket data for browser-only demo mode.
+ Modified Date:         2026-06-09
+ Modification Notes:    Added launch-ready candidate descriptions, real candidate image paths, party logo paths, and running-mate ticket data for development fallback mode.
 *********************************************************/
 
 // ========================================================
-// Demo-mode presidential candidate data
+// Development presidential candidate data
 // ========================================================
-export const simulationCandidates = [
+export const localCandidates = [
   {
     id: 'apc-tinubu',
     name: 'Bola Ahmed Tinubu',
     party_name: 'All Progressives Congress',
     party_code: 'APC',
     running_mate: 'Kashim Shettima',
-    background_text: 'Simulation entry using the Tinubu-Shettima pairing until a final 2027 running-mate decision is confirmed.',
+    background_text: 'Tinubu and Shettima are listed together for this independent Nigeria 2027 public preference poll.',
     color: '#008751',
     logo_url: '/assets/party-badges/apc.jpg',
     photo_url: '/assets/candidates/apc-tinubu.png'
@@ -28,7 +28,7 @@ export const simulationCandidates = [
     party_name: 'African Democratic Congress',
     party_code: 'ADC',
     running_mate: 'Ifeanyi Okowa',
-    background_text: 'Simulation entry using a prior known Atiku running-mate pairing until a final 2027 ticket is confirmed.',
+    background_text: 'Atiku and Okowa are listed together for this independent Nigeria 2027 public preference poll.',
     color: '#1357a6',
     logo_url: '/assets/party-badges/adc.jpg',
     photo_url: '/assets/candidates/adc-atiku.png'
@@ -39,7 +39,7 @@ export const simulationCandidates = [
     party_name: 'Nigeria Democratic Congress',
     party_code: 'NDC',
     running_mate: 'Rabiu Musa Kwankwaso',
-    background_text: 'Simulation entry reflecting the planned Obi-Kwankwaso ticket discussed for the 2027 preference poll.',
+    background_text: 'Obi and Kwankwaso are listed together for this independent Nigeria 2027 public preference poll.',
     color: '#d71920',
     logo_url: '/assets/party-badges/ndc.jpeg',
     photo_url: '/assets/candidates/ndc-obi.png'
@@ -50,7 +50,7 @@ export const simulationCandidates = [
     party_name: 'Peoples Redemption Party',
     party_code: 'PRP',
     running_mate: 'Shehu Musa Gabam',
-    background_text: 'Simulation entry using a prior Donald Duke ticket association until a final 2027 running mate is confirmed.',
+    background_text: 'Duke and Gabam are listed together for this independent Nigeria 2027 public preference poll.',
     color: '#b3261e',
     logo_url: '/assets/party-badges/prp.png',
     photo_url: '/assets/candidates/prp-duke.png'
@@ -61,7 +61,7 @@ export const simulationCandidates = [
     party_name: 'Social Democratic Party',
     party_code: 'SDP',
     running_mate: 'Yusuf Buhari',
-    background_text: 'Simulation entry using the SDP ticket pairing known from the last presidential cycle.',
+    background_text: 'Adebayo and Buhari are listed together for this independent Nigeria 2027 public preference poll.',
     color: '#0062a3',
     logo_url: '/assets/party-badges/sdp.png',
     photo_url: '/assets/candidates/sdp-adebayo.png'
@@ -72,7 +72,7 @@ export const simulationCandidates = [
     party_name: 'African Action Congress',
     party_code: 'AAC',
     running_mate: 'Haruna Garba Magashi',
-    background_text: 'Simulation entry using the AAC ticket pairing known from the last presidential cycle.',
+    background_text: 'Sowore and Magashi are listed together for this independent Nigeria 2027 public preference poll.',
     color: '#f59f00',
     logo_url: '/assets/party-badges/aac.jpg',
     photo_url: '/assets/candidates/aac-sowore.jpg'
@@ -83,7 +83,7 @@ export const simulationCandidates = [
     party_name: 'Peoples Democratic Party',
     party_code: 'PDP',
     running_mate: 'Emana Duke Ambrose-Amawhe',
-    background_text: "Simulation entry using Sandy Onor's prior Cross River ticket pairing for the preference poll.",
+    background_text: 'Onor and Ambrose-Amawhe are listed together for this independent Nigeria 2027 public preference poll.',
     color: '#0b8f3a',
     logo_url: '/assets/party-badges/pdp.jpg',
     photo_url: '/assets/candidates/pdp-onor.png'
@@ -91,9 +91,9 @@ export const simulationCandidates = [
 ];
 
 // ========================================================
-// Demo-mode public issue poll data
+// Development public issue poll data
 // ========================================================
-export const demoPolls = [
+export const localPolls = [
   {
     id: 'poll-economy',
     title: 'Which issue should the next president prioritize first?',
@@ -107,7 +107,7 @@ export const demoPolls = [
   },
   {
     id: 'poll-debate',
-    title: 'Should all simulation candidates join a public debate?',
+    title: 'Should all candidates join a public debate?',
     type: 'yes_no',
     poll_options: [
       { id: 'debate-yes', option_text: 'Yes', vote_count: 68 },
