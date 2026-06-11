@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Participant nickname form and local participant setup.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added nickname validation, passkey/fingerprint registration, and required verification messaging.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added nickname validation, passkey/fingerprint registration, and passkey-only final vote verification messaging.
 *********************************************************/
 
 // ========================================================
@@ -72,7 +72,7 @@ export default function ParticipantForm({ onParticipantReady }) {
     if (!cleaned) return;
 
     setError('');
-    setStatusMessage('Nickname saved. Final voting still requires fingerprint/passkey or OTP verification.');
+    setStatusMessage('Nickname saved. Final voting still requires device passkey confirmation.');
     onParticipantReady(saveParticipant(cleaned));
   }
 
@@ -113,7 +113,7 @@ export default function ParticipantForm({ onParticipantReady }) {
         <h2 id="participant-title">Set up your voting profile</h2>
         <p className="muted">
           Use a device passkey such as fingerprint, Face ID, Touch ID, or Windows Hello when
-          available. If your device cannot use passkeys, the final vote step can use email OTP.
+          available. The final vote step asks your browser for device confirmation before submission.
         </p>
       </div>
 

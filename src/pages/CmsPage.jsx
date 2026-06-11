@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Lightweight CMS page for authenticated candidate content editing.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added email OTP and password admin login, admin allow-list verification, candidate and poll editor forms, candidate image uploads, save/logout controls, and no-ad admin layout.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added email-code and password admin login, admin allow-list verification, candidate and poll editor forms, candidate image uploads, save/logout controls, and no-ad admin layout.
 *********************************************************/
 
 // ========================================================

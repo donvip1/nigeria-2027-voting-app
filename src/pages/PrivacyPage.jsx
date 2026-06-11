@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Public privacy policy page for the Nigeria 2027 virtual voting app.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added launch-ready data collection, passkey and OTP disclosure, Supabase storage, AdSense cookie disclosure, user choices, contact details, and no-ad legal page layout.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added launch-ready data collection, passkey disclosure, Supabase storage, AdSense cookie disclosure, user choices, contact details, and no-ad legal page layout.
 *********************************************************/
 
 // ========================================================
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
         <div>
           <p className="eyebrow">Privacy Policy</p>
           <h2>Nigeria 2027 Virtual Vote Privacy Policy</h2>
-          <p>Last updated: June 8, 2026</p>
+          <p>Last updated: June 11, 2026</p>
         </div>
       </section>
 
@@ -47,7 +47,6 @@ export default function PrivacyPage() {
           <li>Nickname entered by you.</li>
           <li>Browser/device fingerprint created by the app to reduce duplicate submissions.</li>
           <li>Passkey credential ID and verification timestamp if you choose fingerprint/passkey sign-in.</li>
-          <li>Email address if you choose OTP verification, and phone number only if phone OTP is enabled later.</li>
           <li>Vote or poll selection metadata.</li>
           <li>IP metadata when a vote or poll submission is sent to Supabase.</li>
           <li>Basic technical information handled by hosting, analytics, ads, or database providers.</li>
@@ -70,16 +69,12 @@ export default function PrivacyPage() {
           Vote submissions are handled through controlled database functions.
         </p>
 
-        <h3>5. Fingerprint, Passkey, And OTP Verification</h3>
+        <h3>5. Fingerprint And Passkey Verification</h3>
         <p>
           If you choose fingerprint/passkey sign-in, the app uses your browser and device&apos;s
           WebAuthn/passkey feature. The app does not receive your actual fingerprint, face scan, or
           biometric template. Your device handles biometric verification locally and returns a
           passkey credential result to the browser.
-        </p>
-        <p>
-          If passkeys are not available, the app may use Supabase Auth to send a one-time code to
-          your email address. Phone OTP may be added later if the project enables an SMS provider.
         </p>
         <p>
           These features are used only to improve participant continuity and reduce casual duplicate

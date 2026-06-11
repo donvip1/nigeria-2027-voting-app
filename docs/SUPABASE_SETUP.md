@@ -4,8 +4,8 @@
  Year Created:          2026
  Description:           Supabase setup instructions for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added project creation, SQL setup, CMS setup, vote hash patch instructions, test vote reset instructions, OTP auth notes, environment variables, tables, and public API notes.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added project creation, SQL setup, CMS setup, vote hash patch instructions, test vote reset instructions, CMS email auth notes, environment variables, tables, and public API notes.
 *********************************************************/
 -->
 
@@ -71,39 +71,29 @@ https://nigeria-2027-voting-app.vercel.app/**
 5. Save.
 
 <!-- ========================================================
-     Enable OTP authentication
+     Enable CMS email authentication
      ======================================================== -->
 
-## Enable OTP Verification
+## Enable CMS Email Login
 
-The app can request OTP codes through Supabase Auth.
+The public vote flow uses device passkey confirmation, not email or phone OTP. Supabase Auth email is still useful for CMS admin login.
 
-For email OTP:
+For CMS email login:
 
 1. Open Supabase.
 2. Go to `Authentication`.
 3. Open `Providers`.
 4. Enable email authentication.
-5. Make sure email OTP/magic link settings are enabled.
-6. Add a custom SMTP provider if you want reliable delivery. See `docs/FREE_OTP_EMAIL_SETUP.md`.
+5. Make sure email magic link or email code sign-in is enabled.
+6. Add a custom SMTP provider if you want reliable delivery. See `docs/CMS_EMAIL_SETUP.md`.
 
-For phone OTP:
-
-1. Open Supabase.
-2. Go to `Authentication`.
-3. Open `Providers`.
-4. Enable phone authentication.
-5. Configure an SMS provider such as Twilio or another Supabase-supported SMS provider.
-
-If phone auth is not configured, phone OTP will not send. Email OTP can still be used if email auth is enabled.
-
-If your database was created before OTP voting was added, also run:
+If your database was created before authenticated CMS/admin access was added, also run:
 
 ```text
 supabase/grant_authenticated_vote_rpc.sql
 ```
 
-This lets OTP-authenticated users call the same controlled vote submission functions as anonymous visitors.
+This keeps authenticated sessions able to call the same controlled vote submission functions as anonymous visitors.
 
 <!-- ========================================================
      Fix deployed vote hash function error

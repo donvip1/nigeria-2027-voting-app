@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Project information page for simulation, privacy, and public user guidance.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added launch-ready public poll guidance, privacy summary, participation details, and no-ad info layout.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added launch-ready public poll guidance, privacy summary, passkey-only participation details, and no-ad info layout.
 *********************************************************/
 
 // ========================================================
@@ -65,7 +65,8 @@ export default function InfoPage({ onNavigate }) {
         <h3>One verified preference vote per participant</h3>
         <p>
           Before a presidential vote is submitted, the app asks for a fresh passkey confirmation.
-          When passkeys are not available, participants can use a Supabase email OTP flow.
+          Depending on the device, the browser may use fingerprint, face unlock, PIN, password,
+          security key, or another passkey prompt.
         </p>
         <p>
           Public totals update from the database after successful submissions. Results are for

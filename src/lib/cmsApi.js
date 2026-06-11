@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           CMS data access helpers for authenticated candidate editing.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added Supabase admin OTP and password login with deployed redirect, allow-list checks, candidate and poll loading, content updates, image uploads, and logout helpers.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added Supabase admin email-code and password login with deployed redirect, allow-list checks, candidate and poll loading, content updates, image uploads, and logout helpers.
 *********************************************************/
 
 // ========================================================

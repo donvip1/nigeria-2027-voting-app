@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Main app shell, page navigation, candidate loading, and global layout.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added launch-ready public layout, live-style result refresh, results discussion state, clean URL navigation, footer compliance links, and removed public admin/demo notices.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added silent live result refresh, database-reset local profile cleanup, results discussion state, clean URL navigation, footer compliance links, and removed public admin/demo notices.
 *********************************************************/
 
 // ========================================================
@@ -20,8 +20,13 @@ import InfoPage from './pages/InfoPage';
 import PrivacyPage from './pages/PrivacyPage';
 import ContactPage from './pages/ContactPage';
 import CmsPage from './pages/CmsPage';
-import { fetchCandidates } from './lib/api';
-import { getStoredParticipant } from './lib/fingerprint';
+import { fetchCandidates, fetchPublicAppState } from './lib/api';
+import {
+  clearStoredParticipantProfile,
+  getStoredParticipant,
+  getStoredVoteResetVersion,
+  saveStoredVoteResetVersion
+} from './lib/fingerprint';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
 
 const routablePages = ['vote', 'results', 'polls', 'info', 'privacy', 'contact', 'cms'];
@@ -38,7 +43,7 @@ export default function App() {
 
   useEffect(() => {
     setParticipant(getStoredParticipant());
-    refreshCandidates();
+    refreshCandidates({ showLoading: true });
 
     function handleRouteChange() {
       setCurrentPage(getRoutePage());
@@ -56,7 +61,7 @@ export default function App() {
   useEffect(() => {
     const refreshTimer = window.setInterval(() => {
       refreshCandidates();
-    }, 15000);
+    }, 60000);
 
     return () => {
       window.clearInterval(refreshTimer);
@@ -68,8 +73,9 @@ export default function App() {
 
     const resultRefreshChannel = supabase
       .channel('public-result-refresh')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'presidential_votes' }, refreshCandidates)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'poll_options' }, refreshCandidates)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'presidential_votes' }, () => refreshCandidates())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'poll_options' }, () => refreshCandidates())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'candidates' }, () => refreshCandidates())
       .subscribe();
 
     return () => {
@@ -96,15 +102,57 @@ export default function App() {
   // ========================================================
   // Candidate loading from the configured data service
   // ========================================================
-  async function refreshCandidates() {
-    setLoadingCandidates(true);
+  async function refreshCandidates({ showLoading = false } = {}) {
+    if (showLoading) {
+      setLoadingCandidates(true);
+    }
+
     setLoadError('');
+
     try {
-      setCandidates(await fetchCandidates());
+      const loadedCandidates = await fetchCandidates();
+      const publicAppState = await fetchPublicAppState();
+      setCandidates((previousCandidates) =>
+        areCandidateListsEqual(previousCandidates, loadedCandidates) ? previousCandidates : loadedCandidates
+      );
+      syncLocalParticipantAfterDatabaseReset(loadedCandidates, publicAppState);
+      setLoadError('');
     } catch (error) {
-      setLoadError(error.message || 'Could not load candidates.');
+      if (showLoading) {
+        setLoadError(error.message || 'Could not load candidates.');
+      }
     } finally {
-      setLoadingCandidates(false);
+      if (showLoading) {
+        setLoadingCandidates(false);
+      }
+    }
+  }
+
+  function syncLocalParticipantAfterDatabaseReset(loadedCandidates, publicAppState = {}) {
+    const totalVotes = loadedCandidates.reduce((sum, candidate) => sum + Number(candidate.vote_count || 0), 0);
+    const storedParticipant = getStoredParticipant();
+    const resetVersion = publicAppState.vote_reset_version;
+    const storedResetVersion = getStoredVoteResetVersion();
+
+    if (resetVersion && storedResetVersion && resetVersion !== storedResetVersion) {
+      clearStoredParticipantProfile();
+      saveStoredVoteResetVersion(resetVersion);
+      setParticipant(null);
+      return;
+    }
+
+    if (resetVersion && !storedResetVersion) {
+      saveStoredVoteResetVersion(resetVersion);
+
+      if (resetVersion !== 'initial' && storedParticipant) {
+        clearStoredParticipantProfile();
+        setParticipant(null);
+      }
+    }
+
+    if (totalVotes === 0 && (storedParticipant?.hasVoted || isLikelyTestParticipant(storedParticipant))) {
+      clearStoredParticipantProfile();
+      setParticipant(null);
     }
   }
 
@@ -179,4 +227,33 @@ function getRoutePage() {
 
   const hashPage = window.location.hash.replace('#', '');
   return routablePages.includes(hashPage) ? hashPage : 'vote';
+}
+
+function areCandidateListsEqual(previousCandidates, nextCandidates) {
+  if (previousCandidates.length !== nextCandidates.length) return false;
+
+  return previousCandidates.every((previousCandidate, index) => {
+    const nextCandidate = nextCandidates[index];
+    if (!nextCandidate) return false;
+
+    return [
+      'id',
+      'slug',
+      'name',
+      'party_name',
+      'party_code',
+      'running_mate',
+      'background_text',
+      'color',
+      'logo_url',
+      'photo_url',
+      'is_active',
+      'vote_count'
+    ].every((key) => String(previousCandidate[key] ?? '') === String(nextCandidate[key] ?? ''));
+  });
+}
+
+function isLikelyTestParticipant(participant) {
+  if (!participant?.nickname) return false;
+  return /^(test|tester|demo|sample)\d*$/i.test(participant.nickname.trim());
 }

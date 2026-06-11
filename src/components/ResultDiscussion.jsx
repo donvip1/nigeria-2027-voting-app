@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Vote-gated public result discussion with comments, mentions, and reactions.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added 48-hour comments, nickname display, mention rendering, profanity/contact moderation, and emoji-style reactions.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added 48-hour comments, nickname display, silent background refresh, mention rendering, profanity/contact moderation, and emoji-style reactions.
 *********************************************************/
 
 // ========================================================
@@ -38,7 +38,7 @@ export default function ResultDiscussion({ participant }) {
   const canComment = Boolean(participant?.nickname && participant?.fingerprint && participant?.hasVoted);
 
   useEffect(() => {
-    loadComments();
+    loadComments({ showLoading: true });
 
     const refreshTimer = window.setInterval(() => {
       loadComments();
@@ -52,8 +52,10 @@ export default function ResultDiscussion({ participant }) {
   // ========================================================
   // Comment loading and submission handlers
   // ========================================================
-  async function loadComments() {
-    setLoading(true);
+  async function loadComments({ showLoading = false } = {}) {
+    if (showLoading) {
+      setLoading(true);
+    }
 
     try {
       setComments(await fetchResultComments());
@@ -61,7 +63,9 @@ export default function ResultDiscussion({ participant }) {
     } catch (loadError) {
       setError(readableDiscussionError(loadError));
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
     }
   }
 

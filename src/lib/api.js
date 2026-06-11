@@ -1,10 +1,10 @@
 /*********************************************************
  Author:                Philip Awazie Donvip
  Year Created:          2026
- Description:           Data access layer for candidates, polls, votes, sharing, comments, and reactions.
+ Description:           Data access layer for candidates, polls, votes, app state, sharing, comments, and reactions.
  Modified By:           Philip Awazie Donvip
  Modified Date:         2026-06-09
- Modification Notes:    Added Supabase RPC calls, public result comments, reactions, production-ready unavailable-state errors, and development-only local persistence fallback.
+ Modification Notes:    Added Supabase RPC calls, public reset-state lookup, result comments, reactions, production-ready unavailable-state errors, and development-only local persistence fallback.
 *********************************************************/
 
 // ========================================================
@@ -36,6 +36,29 @@ export async function fetchCandidates() {
 
   if (error) throw error;
   return data;
+}
+
+// ========================================================
+// Public app state loading
+// ========================================================
+export async function fetchPublicAppState() {
+  if (isLocalFallbackEnabled || !isSupabaseConfigured) {
+    return {};
+  }
+
+  const { data, error } = await supabase
+    .from('app_state')
+    .select('key, value')
+    .in('key', ['vote_reset_version']);
+
+  if (error) {
+    return {};
+  }
+
+  return (data || []).reduce((state, row) => {
+    state[row.key] = row.value;
+    return state;
+  }, {});
 }
 
 // ========================================================

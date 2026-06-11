@@ -3,15 +3,16 @@
  Year Created:          2026
  Description:           Presidential virtual voting page and vote submission flow.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added launch-ready candidate carousel, verification flow, browser vote reset, and policy-safe in-content ad placement.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added passkey-only auto-submit voting, anti-bot readiness gate, full browser profile reset, and policy-safe in-content ad placement.
 *********************************************************/
 
 // ========================================================
 // Imports, components, and API helpers
 // ========================================================
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Fingerprint, RotateCcw } from 'lucide-react';
+import AntiBotGate, { turnstileSiteKey } from '../components/AntiBotGate';
 import AdSlot from '../components/AdSlot';
 import CandidateCard from '../components/CandidateCard';
 import Disclaimer from '../components/Disclaimer';
@@ -20,7 +21,7 @@ import VoterVerificationPanel from '../components/VoterVerificationPanel';
 import VoteConfirmation from '../components/VoteConfirmation';
 import { submitPresidentialVote } from '../lib/api';
 import { getCandidatePortrait, getPartyBadge } from '../lib/candidateAssets';
-import { clearLocalVoteMarkers, registerParticipantPasskey, saveParticipant, verifyStoredPasskey } from '../lib/fingerprint';
+import { clearStoredParticipantProfile, registerParticipantPasskey, saveParticipant, verifyStoredPasskey } from '../lib/fingerprint';
 
 // ========================================================
 // Vote page component and local vote state
@@ -32,10 +33,39 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [verificationMessage, setVerificationMessage] = useState('');
-  const [finalVerification, setFinalVerification] = useState(null);
+  const [antiBotVerified, setAntiBotVerified] = useState(false);
+  const [antiBotMessage, setAntiBotMessage] = useState('');
+  const [antiBotResetSignal, setAntiBotResetSignal] = useState(0);
+  const [isVerifyingAntiBot, setIsVerifyingAntiBot] = useState(false);
   const [isSettingUpPasskey, setIsSettingUpPasskey] = useState(false);
   const [isVerifyingPasskey, setIsVerifyingPasskey] = useState(false);
   const [isFinalPasskeyBusy, setIsFinalPasskeyBusy] = useState(false);
+
+  const handleAntiBotVerified = useCallback(async (token) => {
+    setIsVerifyingAntiBot(true);
+    setAntiBotMessage('');
+    setError('');
+
+    try {
+      if (turnstileSiteKey && !import.meta.env.DEV) {
+        await verifyTurnstileToken(token);
+      }
+
+      setAntiBotVerified(true);
+      setAntiBotMessage('Anti-bot verification complete.');
+    } catch (verifyError) {
+      setAntiBotVerified(false);
+      setError(readableAntiBotError(verifyError));
+      setAntiBotResetSignal((currentSignal) => currentSignal + 1);
+    } finally {
+      setIsVerifyingAntiBot(false);
+    }
+  }, []);
+
+  const handleAntiBotExpired = useCallback(() => {
+    setAntiBotVerified(false);
+    setAntiBotMessage('Anti-bot verification expired. Complete it again before confirming.');
+  }, []);
 
   // ========================================================
   // Existing participant passkey setup handler
@@ -85,8 +115,13 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
   // Final vote verification handlers
   // ========================================================
   async function handleFinalPasskeyVerify() {
-    if (!participant?.hasPasskey) {
-      setError('Set up fingerprint/passkey first or use OTP verification.');
+    if (!participant?.nickname) {
+      setError('Set up your voting profile first.');
+      return;
+    }
+
+    if (!antiBotVerified) {
+      setError('Complete the anti-bot verification before confirming with your device passkey.');
       return;
     }
 
@@ -94,15 +129,24 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
     setError('');
 
     try {
-      const verification = await verifyStoredPasskey();
-      setFinalVerification({
-        method: 'passkey',
-        verifiedAt: verification.verifiedAt
-      });
-      setParticipant({
-        ...participant,
-        passkeyVerifiedAt: verification.verifiedAt
-      });
+      let verifiedParticipant = participant;
+      let verifiedAt = '';
+
+      if (participant.hasPasskey) {
+        const verification = await verifyStoredPasskey();
+        verifiedAt = verification.verifiedAt;
+        verifiedParticipant = {
+          ...participant,
+          passkeyVerifiedAt: verifiedAt
+        };
+      } else {
+        const passkeyData = await registerParticipantPasskey(participant.nickname);
+        verifiedAt = passkeyData.verifiedAt;
+        verifiedParticipant = saveParticipant(participant.nickname, passkeyData);
+      }
+
+      setParticipant(verifiedParticipant);
+      await submitVerifiedVote(verifiedAt, verifiedParticipant);
     } catch (passkeyError) {
       setError(readablePasskeyError(passkeyError));
     } finally {
@@ -110,43 +154,30 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
     }
   }
 
-  function handleFinalOtpVerified(verification) {
-    setFinalVerification({
-      method: 'otp',
-      contactType: verification.contactType,
-      contact: verification.contact,
-      verifiedAt: verification.verifiedAt
-    });
-    setParticipant({
-      ...participant,
-      otpVerification: verification
-    });
-    setError('');
-  }
-
   function handleCandidateSelect(candidate) {
     setSelectedCandidate(candidate);
-    setFinalVerification(null);
+    setAntiBotVerified(false);
+    setAntiBotMessage('');
     setError('');
   }
 
   function handleClearLocalVoteMarkers() {
-    clearLocalVoteMarkers();
-    setParticipant({
-      ...participant,
-      hasVoted: false
-    });
-    setVerificationMessage('This browser vote status has been reset.');
+    clearStoredParticipantProfile();
+    setParticipant(null);
+    setSelectedCandidate(null);
+    setAntiBotVerified(false);
+    setAntiBotMessage('');
+    setVerificationMessage('This browser profile and vote status have been reset.');
   }
 
   // ========================================================
-  // Confirm and submit selected presidential candidate
+  // Confirm and submit selected presidential candidate after passkey verification
   // ========================================================
-  async function handleConfirmVote() {
-    if (!selectedCandidate || !participant) return;
+  async function submitVerifiedVote(passkeyVerifiedAt, verifiedParticipant = participant) {
+    if (!selectedCandidate || !verifiedParticipant) return;
 
-    if (!finalVerification) {
-      setError('Complete fingerprint/passkey or OTP verification before submitting your vote.');
+    if (!antiBotVerified) {
+      setError('Complete the anti-bot verification before confirming with your device passkey.');
       return;
     }
 
@@ -156,12 +187,14 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
     try {
       await submitPresidentialVote({
         candidateId: selectedCandidate.id,
-        nickname: participant.nickname,
-        fingerprint: participant.fingerprint
+        nickname: verifiedParticipant.nickname,
+        fingerprint: verifiedParticipant.fingerprint
       });
 
-      setParticipant({ ...participant, hasVoted: true });
+      setParticipant({ ...verifiedParticipant, hasVoted: true, passkeyVerifiedAt });
       setSelectedCandidate(null);
+      setAntiBotVerified(false);
+      setAntiBotMessage('');
       await onRefresh();
     } catch (voteError) {
       setError(readableVoteError(voteError));
@@ -215,9 +248,7 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
                 ? `Fingerprint/passkey enabled${
                     participant.passkeyVerifiedAt ? ` - last verified ${formatVerifiedAt(participant.passkeyVerifiedAt)}` : ''
                   }.`
-                : participant.otpVerification
-                  ? `OTP verified by ${participant.otpVerification.contactType}: ${participant.otpVerification.contact}.`
-                  : 'Verification required before vote submission. Use fingerprint/passkey or OTP at the final step.'}
+                : 'Device confirmation is required before vote submission. Your device may use fingerprint, face unlock, PIN, or password.'}
             </p>
             {verificationMessage && <p className="auth-hint auth-hint--inline">{verificationMessage}</p>}
           </div>
@@ -258,7 +289,7 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
       <section className="section-heading">
         <div>
           <p className="eyebrow">Public preference ballot</p>
-          <h2>Select your preferred ticket</h2>
+          <h2>Vote for your preferred ticket</h2>
         </div>
         <p>Candidate and running-mate information can be updated as publicly available details change.</p>
       </section>
@@ -290,27 +321,36 @@ export default function VotePage({ candidates, participant, setParticipant, onRe
         candidate={selectedCandidate}
         isSubmitting={isSubmitting}
         error={error}
-        verificationComplete={Boolean(finalVerification)}
         verificationPanel={
           selectedCandidate ? (
             <VoterVerificationPanel
               title="Confirm vote submission"
-              description="Complete fingerprint/passkey confirmation or OTP verification before the vote can be submitted."
+              description="Confirm with your device passkey, fingerprint, face unlock, PIN, or device password. The vote submits automatically after confirmation."
               passkeyLabel="Confirm with fingerprint/passkey"
-              otpLabel="Send vote code"
               isPasskeyBusy={isFinalPasskeyBusy}
               onPasskeyVerify={handleFinalPasskeyVerify}
-              onOtpVerified={handleFinalOtpVerified}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !antiBotVerified}
+            />
+          ) : null
+        }
+        antiBotPanel={
+          selectedCandidate ? (
+            <AntiBotGate
+              verified={antiBotVerified}
+              verifying={isVerifyingAntiBot}
+              message={antiBotMessage}
+              resetSignal={antiBotResetSignal}
+              onVerified={handleAntiBotVerified}
+              onExpired={handleAntiBotExpired}
             />
           ) : null
         }
         onCancel={() => {
           setSelectedCandidate(null);
-          setFinalVerification(null);
+          setAntiBotVerified(false);
+          setAntiBotMessage('');
           setError('');
         }}
-        onConfirm={handleConfirmVote}
       />
     </main>
   );
@@ -339,6 +379,35 @@ function readablePasskeyError(error) {
   }
 
   return error?.message || 'Fingerprint/passkey verification failed.';
+}
+
+function readableAntiBotError(error) {
+  const message = error?.message || 'Anti-bot verification failed.';
+
+  if (message.includes('turnstile_secret_not_configured')) {
+    return 'Anti-bot server verification is not configured yet. Add TURNSTILE_SECRET_KEY in Vercel, then redeploy.';
+  }
+
+  if (message.includes('missing_token')) {
+    return 'Anti-bot verification did not return a token. Complete the check again.';
+  }
+
+  return 'Anti-bot verification failed. Refresh the page and try again.';
+}
+
+async function verifyTurnstileToken(token) {
+  const response = await fetch('/api/verify-turnstile', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ token })
+  });
+  const result = await response.json().catch(() => ({}));
+
+  if (!response.ok || !result.success) {
+    throw new Error(result.error || 'turnstile_verification_failed');
+  }
 }
 
 function formatVerifiedAt(value) {

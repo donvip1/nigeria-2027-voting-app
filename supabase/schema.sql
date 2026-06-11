@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Supabase database schema for the Nigeria 2027 public opinion polling app.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added participants, candidates, votes, polls, 48-hour result comments, reactions, CMS admins, RLS policies, read views, authenticated vote RPC permissions, and extension-free vote hashing.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added participants, candidates, votes, polls, reset app state, 48-hour result comments, reactions, CMS admins, RLS policies, read views, authenticated vote RPC permissions, and extension-free vote hashing.
 *********************************************************/
 
 -- ========================================================
@@ -45,6 +45,16 @@ create table if not exists public.cms_admins (
   email text not null unique,
   created_at timestamptz not null default now()
 );
+
+create table if not exists public.app_state (
+  key text primary key,
+  value text not null,
+  updated_at timestamptz not null default now()
+);
+
+insert into public.app_state (key, value)
+values ('vote_reset_version', 'initial')
+on conflict (key) do nothing;
 
 -- ========================================================
 -- Presidential vote table
@@ -172,6 +182,7 @@ group by c.id;
 alter table public.participants enable row level security;
 alter table public.candidates enable row level security;
 alter table public.cms_admins enable row level security;
+alter table public.app_state enable row level security;
 alter table public.presidential_votes enable row level security;
 alter table public.polls enable row level security;
 alter table public.poll_options enable row level security;
@@ -203,6 +214,11 @@ using (
     and polls.is_active = true
   )
 );
+
+drop policy if exists "Read public app state" on public.app_state;
+create policy "Read public app state"
+on public.app_state for select
+using (true);
 
 drop policy if exists "Read unexpired result comments" on public.result_comments;
 create policy "Read unexpired result comments"
@@ -314,6 +330,7 @@ grant select on public.candidates to anon;
 grant select on public.polls to anon;
 grant select on public.poll_options to anon;
 grant select on public.result_comments_public to anon;
+grant select on public.app_state to anon;
 grant select on public.cms_admins to authenticated;
 grant select on public.candidates to authenticated;
 grant update on public.candidates to authenticated;
@@ -322,6 +339,7 @@ grant update on public.polls to authenticated;
 grant select on public.poll_options to authenticated;
 grant update on public.poll_options to authenticated;
 grant select on public.result_comments_public to authenticated;
+grant select on public.app_state to authenticated;
 
 -- ========================================================
 -- Candidate asset storage bucket and policies

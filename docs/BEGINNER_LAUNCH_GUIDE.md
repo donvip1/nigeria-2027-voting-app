@@ -4,8 +4,8 @@
  Year Created:          2026
  Description:           Beginner launch guide for local review, Supabase setup, GitHub push, and Vercel deployment.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-07
- Modification Notes:    Added step-by-step instructions for collecting credentials, configuring the app, and deploying the MVP.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added step-by-step instructions for collecting credentials, configuring Supabase, setting anti-bot keys, and deploying the MVP.
 *********************************************************/
 -->
 
@@ -45,14 +45,15 @@ http://localhost:5173/
 ### What To Check
 
 1. The page should show `Nigeria 2027 Virtual Vote`.
-2. The yellow demo-mode banner should appear if Supabase is not connected yet.
+2. The voting page should load candidate cards.
 3. Click `Vote`.
 4. Enter a nickname with at least 3 characters.
 5. Select a candidate.
-6. Confirm the vote.
-7. Click `Results` and check that the vote count changed.
-8. Click `Polls`, vote in a poll, and check that the poll count changed.
-9. Click `Info` and read the disclaimer and launch requirements.
+6. Complete the anti-bot check if it appears.
+7. Confirm with fingerprint, face unlock, device PIN, password, or passkey.
+8. Click `Results` and check that the vote count changed.
+9. Click `Polls`, vote in a poll, and check that the poll count changed.
+10. Click `Info` and read the public disclaimer.
 
 ### If The Page Does Not Open
 
@@ -182,7 +183,7 @@ npm run dev
 http://localhost:5173/
 ```
 
-If Supabase is connected correctly, the yellow demo-mode banner should disappear.
+If Supabase is connected correctly, the app should load candidates from your Supabase database instead of local browser-only data.
 
 <!-- ========================================================
      Step 3: Initialize Git and push to GitHub
@@ -320,6 +321,8 @@ Add:
 VITE_SUPABASE_URL=https://your-project-ref.supabase.co
 VITE_SUPABASE_ANON_KEY=your-public-or-anon-key
 VITE_ADSENSE_CLIENT=
+VITE_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
 ```
 
 Select Production, Preview, and Development if Vercel gives you environment choices.

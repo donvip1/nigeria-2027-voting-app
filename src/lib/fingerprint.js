@@ -1,16 +1,16 @@
 /*********************************************************
  Author:                Philip Awazie Donvip
  Year Created:          2026
- Description:           Participant identity, duplicate-vote markers, and lightweight fingerprint helpers.
+ Description:           Participant identity, duplicate-vote markers, reset markers, and lightweight fingerprint helpers.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Improved passkey availability, passkey registration, OTP-aware participant storage, local test vote reset, vote-state preservation, poll vote tracking, IP lookup, and browser fingerprinting.
+ Modified Date:         2026-06-11
+ Modification Notes:    Improved passkey availability, passkey registration, reset-version tracking, full local profile reset, vote-state preservation, poll vote tracking, IP lookup, and browser fingerprinting.
 *********************************************************/
 
 // ========================================================
-// Imports
+// Local storage keys
 // ========================================================
-import { getStoredOtpVerification } from './otpAuth';
+const resetVersionKey = 'n27_seen_vote_reset_version';
 
 // ========================================================
 // Stored participant lookup
@@ -21,7 +21,6 @@ export function getStoredParticipant() {
   const hasVoted = localStorage.getItem('n27_presidential_vote') === 'true';
   const passkeyCredentialId = localStorage.getItem('n27_passkey_credential_id');
   const passkeyVerifiedAt = localStorage.getItem('n27_passkey_verified_at');
-  const otpVerification = getStoredOtpVerification();
 
   if (!nickname || !fingerprint) return null;
   return {
@@ -30,8 +29,7 @@ export function getStoredParticipant() {
     hasVoted,
     hasPasskey: Boolean(passkeyCredentialId),
     passkeyCredentialId,
-    passkeyVerifiedAt,
-    otpVerification
+    passkeyVerifiedAt
   };
 }
 
@@ -60,9 +58,20 @@ export function saveParticipant(nickname, passkeyData = null) {
     hasVoted: localStorage.getItem('n27_presidential_vote') === 'true',
     hasPasskey: Boolean(passkeyData?.credentialId || localStorage.getItem('n27_passkey_credential_id')),
     passkeyCredentialId: passkeyData?.credentialId || localStorage.getItem('n27_passkey_credential_id'),
-    passkeyVerifiedAt: passkeyData?.verifiedAt || localStorage.getItem('n27_passkey_verified_at'),
-    otpVerification: getStoredOtpVerification()
+    passkeyVerifiedAt: passkeyData?.verifiedAt || localStorage.getItem('n27_passkey_verified_at')
   };
+}
+
+// ========================================================
+// Database reset-version tracking
+// ========================================================
+export function getStoredVoteResetVersion() {
+  return localStorage.getItem(resetVersionKey);
+}
+
+export function saveStoredVoteResetVersion(version) {
+  if (!version) return;
+  localStorage.setItem(resetVersionKey, version);
 }
 
 // ========================================================
@@ -209,6 +218,22 @@ export function markPollVote(optionGroupId) {
 export function clearLocalVoteMarkers() {
   localStorage.removeItem('n27_presidential_vote');
   localStorage.removeItem('n27_presidential_candidate');
+
+  Object.keys(localStorage)
+    .filter((key) => key.startsWith('n27_poll_'))
+    .forEach((key) => localStorage.removeItem(key));
+}
+
+export function clearStoredParticipantProfile() {
+  [
+    'n27_nickname',
+    'n27_fingerprint',
+    'n27_presidential_vote',
+    'n27_presidential_candidate',
+    'n27_passkey_credential_id',
+    'n27_passkey_verified_at',
+    'n27_otp_verification'
+  ].forEach((key) => localStorage.removeItem(key));
 
   Object.keys(localStorage)
     .filter((key) => key.startsWith('n27_poll_'))

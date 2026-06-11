@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Supabase browser client setup for the virtual voting app.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added environment-variable configuration, OTP/CMS auth persistence, and development-only local fallback detection.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added environment-variable configuration, CMS auth persistence, and development-only local fallback detection.
 *********************************************************/
 
 // ========================================================

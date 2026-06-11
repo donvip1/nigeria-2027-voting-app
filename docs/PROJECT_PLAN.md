@@ -4,8 +4,8 @@
  Year Created:          2026
  Description:           Product and technical plan for the Nigeria 2027 virtual voting MVP.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Updated completed scope, remaining build checklist, technical architecture, and future enhancement list.
+ Modified Date:         2026-06-11
+ Modification Notes:    Updated completed scope, passkey-only vote verification, anti-bot gate, remaining build checklist, technical architecture, and future enhancement list.
 *********************************************************/
 -->
 
@@ -32,7 +32,7 @@ Build and launch a free-tier MVP for a Nigeria 2027 virtual voting simulation. T
 - Support extra polls for yes/no and multiple-choice public questions.
 - Include non-intrusive ad areas that can later be connected to AdSense.
 - Include public information, privacy policy, contact page, and simulation disclaimers.
-- Require passkey or email OTP verification before presidential vote submission.
+- Require anti-bot verification and passkey/device confirmation before presidential vote submission.
 - Provide a protected starter CMS for candidate, image, and poll content updates.
 - Include SEO metadata, sitemap, and crawler guidance.
 - Work well on mobile and desktop.
@@ -46,8 +46,9 @@ Build and launch a free-tier MVP for a Nigeria 2027 virtual voting simulation. T
 - Frontend: React, Vite, CSS, lucide-react icons.
 - Database: Supabase Postgres.
 - Security model: public reads for active content, vote submission through `security definer` RPC functions, no direct frontend vote table writes.
-- Auth: local passkey/WebAuthn support plus Supabase email OTP fallback.
-- CMS: Supabase Auth email OTP with password fallback, `cms_admins` allow-list, RLS-protected candidate and poll updates, plus Supabase Storage for uploaded candidate assets.
+- Public vote verification: local passkey/WebAuthn confirmation with browser-supported fingerprint, face unlock, PIN, password, security key, or passkey prompt.
+- Anti-bot: optional Cloudflare Turnstile widget through `VITE_TURNSTILE_SITE_KEY` with Vercel serverless token verification through `TURNSTILE_SECRET_KEY`.
+- CMS: Supabase Auth email code or magic link with password fallback, `cms_admins` allow-list, RLS-protected candidate and poll updates, plus Supabase Storage for uploaded candidate assets.
 - Deployment: Vercel frontend, Supabase backend.
 - Fallback: demo mode using local storage when Supabase env vars are missing.
 
@@ -59,7 +60,7 @@ Build and launch a free-tier MVP for a Nigeria 2027 virtual voting simulation. T
 
 1. Build React app shell and navigation. Done.
 2. Add participant nickname/fingerprint flow. Done.
-3. Add required passkey/email OTP vote verification. Done.
+3. Add required anti-bot and passkey/device vote verification. Done.
 4. Add candidate voting flow with final confirmation. Done.
 5. Add results and poll pages. Done.
 6. Add Supabase schema, RPC functions, seed data, and reset scripts. Done.
@@ -77,9 +78,10 @@ Build and launch a free-tier MVP for a Nigeria 2027 virtual voting simulation. T
 ## Remaining Build Work
 
 - Configure Supabase Auth redirect URLs for the deployed Vercel domain.
-- Configure Supabase email OTP delivery with built-in email or free SMTP.
 - Test the full passkey vote flow on HTTPS after each Vercel deployment.
-- Test the full email OTP vote flow after Supabase Auth email settings are confirmed.
+- Configure Cloudflare Turnstile site key in Vercel.
+- Move final vote submission behind a backend or Supabase Edge Function before treating bot protection as fully hardened.
+- Configure Supabase email delivery with built-in email or free SMTP for CMS login.
 - Test the CMS email-code login, password fallback login, candidate save, poll save, and image upload flow after `cms_admin_setup.sql` is run.
 - Add real AdSense slot IDs after AdSense approval.
 - Enable AdSense Auto Ads/vignette ads from the Google AdSense dashboard.

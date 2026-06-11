@@ -4,8 +4,8 @@
  Year Created:          2026
  Description:           Project README for the Nigeria 2027 public opinion polling app.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added launch-ready setup summary, deployment notes, public poll disclaimer, AdSense status, and development fallback notes.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added launch-ready setup summary, deployment notes, public poll disclaimer, AdSense status, Turnstile anti-bot setup, and development fallback notes.
 *********************************************************/
 -->
 
@@ -64,9 +64,13 @@ Copy `.env.example` to `.env` and fill in:
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_public_key
 VITE_ADSENSE_CLIENT=ca-pub-your-id-after-approval
+VITE_TURNSTILE_SITE_KEY=your_cloudflare_turnstile_site_key_optional
+TURNSTILE_SECRET_KEY=your_cloudflare_turnstile_secret_key_for_vercel_only
 ```
 
 Without Supabase values, production shows a service-unavailable message. Local development can still use browser storage while setting up the backend.
+
+`VITE_TURNSTILE_SITE_KEY` enables the Cloudflare Turnstile anti-bot widget before final passkey confirmation. `TURNSTILE_SECRET_KEY` is private and is used only by the Vercel serverless verification endpoint.
 
 <!-- ========================================================
      Supabase backend setup summary
@@ -79,7 +83,8 @@ Without Supabase values, production shows a service-unavailable message. Local d
 3. Run `supabase/schema.sql`.
 4. Run `supabase/seed.sql`.
 5. Add your Supabase project URL and anon key to `.env`.
-6. Restart `npm run dev`.
+6. Run `supabase/reset_test_votes.sql` whenever you intentionally clear test data before launch.
+7. Restart `npm run dev`.
 
 <!-- ========================================================
      Vercel deployment summary

@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Results page for live-style virtual vote totals and rankings.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added launch-ready public poll totals, share links, result discussion, party badges, ranked rows, progress bars, and policy-safe result-page ads.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added launch-ready public poll totals, share links, result discussion, party badges, ranked chart rows, progress bars, and policy-safe result-page ads.
 *********************************************************/
 
 // ========================================================
@@ -39,6 +39,43 @@ export default function ResultsPage({ candidates, participant, loading }) {
           </p>
         </div>
       </section>
+
+      {!loading && candidates.length > 0 && (
+        <section className="results-chart" aria-label="Candidate vote share chart">
+          <div className="results-chart__lead">
+            <span
+              style={{
+                '--chart-color': leader?.color || '#008751',
+                '--chart-percent': getPercentage(leader?.vote_count, totalVotes)
+              }}
+            >
+              {getPercentage(leader?.vote_count, totalVotes)}%
+            </span>
+            <div>
+              <p className="eyebrow">Leading share</p>
+              <h3>{leader?.name || 'No leader yet'}</h3>
+            </div>
+          </div>
+
+          <div className="chart-list">
+            {candidates.map((candidate) => {
+              const percentage = getPercentage(candidate.vote_count, totalVotes);
+              return (
+                <div key={candidate.id} className="chart-item">
+                  <div className="chart-item__label">
+                    <strong>{candidate.party_code}</strong>
+                    <span>{candidate.name}</span>
+                    <b>{percentage}%</b>
+                  </div>
+                  <div className="chart-track">
+                    <span style={{ width: `${percentage}%`, background: candidate.color || '#008751' }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       <section className="results-panel">
         {loading ? (

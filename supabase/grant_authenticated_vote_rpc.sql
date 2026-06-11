@@ -1,10 +1,10 @@
 /*********************************************************
  Author:                Philip Awazie Donvip
  Year Created:          2026
- Description:           Supabase patch for allowing OTP-authenticated users to submit votes.
+ Description:           Supabase patch for allowing authenticated users to submit vote RPC calls.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-08
- Modification Notes:    Added authenticated role execute grants for presidential and poll vote RPC functions.
+ Modified Date:         2026-06-11
+ Modification Notes:    Updated authenticated role execute grants documentation for presidential and poll vote RPC functions.
 *********************************************************/
 
 -- ========================================================

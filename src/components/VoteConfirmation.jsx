@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Final confirmation modal before submitting a virtual presidential vote.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added launch-ready final verification support, candidate summary, modal controls, and submit error display.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added anti-bot gate, passkey-only automatic submission flow, candidate summary, modal controls, and submit error display.
 *********************************************************/
 
 // ========================================================
@@ -19,17 +19,16 @@ export default function VoteConfirmation({
   candidate,
   isSubmitting,
   error,
-  verificationComplete,
+  antiBotPanel,
   verificationPanel,
   onCancel,
-  onConfirm
 }) {
   if (!candidate) return null;
 
   return (
     <div className="modal-backdrop" role="presentation">
       <section className="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
-        <button type="button" className="icon-button modal__close" onClick={onCancel} aria-label="Close">
+        <button type="button" className="icon-button modal__close" onClick={onCancel} disabled={isSubmitting} aria-label="Close">
           <X aria-hidden="true" size={18} />
         </button>
 
@@ -46,6 +45,8 @@ export default function VoteConfirmation({
           <p>{candidate.running_mate ? `Running mate: ${candidate.running_mate}` : 'Running mate: To be announced'}</p>
         </div>
 
+        {antiBotPanel}
+
         {verificationPanel}
 
         {error && <p className="form-error">{error}</p>}
@@ -54,9 +55,7 @@ export default function VoteConfirmation({
           <button type="button" className="button-secondary" onClick={onCancel} disabled={isSubmitting}>
             Review again
           </button>
-          <button type="button" onClick={onConfirm} disabled={isSubmitting || !verificationComplete}>
-            {isSubmitting ? 'Submitting...' : 'Submit verified vote'}
-          </button>
+          {isSubmitting && <span className="submit-status">Submitting verified vote...</span>}
         </div>
       </section>
     </div>

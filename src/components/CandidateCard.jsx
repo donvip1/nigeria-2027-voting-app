@@ -3,8 +3,8 @@
  Year Created:          2026
  Description:           Candidate display card for the presidential virtual ballot.
  Modified By:           Philip Awazie Donvip
- Modified Date:         2026-06-09
- Modification Notes:    Added launch-ready candidate portrait, party badge, ticket display, vote count, running mate, and selection button states.
+ Modified Date:         2026-06-11
+ Modification Notes:    Added launch-ready candidate portrait, party badge, ticket display, vote count, running mate, and clearer vote button states.
 *********************************************************/
 
 // ========================================================
@@ -60,7 +60,7 @@ export default function CandidateCard({ candidate, disabled, disabledReason = 'U
         disabled={disabled}
       >
         <CheckCircle2 aria-hidden="true" size={17} />
-        <span>{disabled ? disabledReason : 'Select ticket'}</span>
+        <span>{disabled ? disabledReason : 'Vote for this ticket'}</span>
       </button>
     </article>
   );
